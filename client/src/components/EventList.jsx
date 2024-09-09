@@ -23,13 +23,20 @@ function EventList({ event, option }) {
 
   return (
     <>
-      <div className="px-5">
-        <div className=" mt-8 flex justify-between items-center gap-12">
-          <div id="about_event" className="flex gap-6 w-full h-auto">
+      <div className="md:px-5">
+        <div className="mt-8 md:flex justify-between items-center gap-12">
+          <div
+            id="about_event"
+            className="block lg:flex gap-2 lg:gap-6 w-full h-auto"
+          >
             <div>
-              <img className="w-32 rounded-2xl" src="../badminton.jpg" alt="" />
+              <img
+                className="w-8/12 md:w-24 lg:w-36 h-[90%] rounded-2xl"
+                src="../badminton.jpg"
+                alt=""
+              />
             </div>
-            <div className="text-white text-lg w-full h-auto">
+            <div className="text-white text-lg">
               <input
                 type="text"
                 name="eventTitle"
@@ -62,7 +69,10 @@ function EventList({ event, option }) {
             </div>
           </div>
           {option ? (
-            <div id="edit" className="flex gap-8 cursor-pointer">
+            <div
+              id="edit"
+              className="flex gap-8 cursor-pointer mt-2 justify-end"
+            >
               <button
                 onClick={() => {
                   removeEvent(event._id);

@@ -8,15 +8,15 @@ function App() {
   return (
     <>
       {token ? (
-        <div className="flex">
+        <div className="flex relative w-[115%] md:w-[102%] -left-[90px] md:-left-[80px] gap-2 md:gap-10">
           <Navbar />
-          <main className="relative w-3/5 h-screen">
+          <main className="relative w-full h-screen px-4">
             <Outlet />
           </main>
         </div>
       ) : (
-        <div className="text-center text-4xl text-white font-inter font-bold">
-          <h1>404 Error</h1>
+        <div className="text-center relative top-10 text-4xl text-white font-inter font-bold">
+          <h1>401 Unauthorised to Access</h1>
         </div>
       )}
     </>

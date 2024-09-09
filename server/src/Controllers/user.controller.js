@@ -74,7 +74,7 @@ const updateUserDetail = async (req, res) => {
     const { _id } = req.user;
     const existedEvent = await User.findById({ _id });
     if (!existedEvent) {
-      return res.status(404).json({ message: "Event not found" });
+      return res.status(404).json({ message: "User not found" });
     }
     const { jobrole, username, email } = req.body;
     if ([jobrole, username, email].some((field) => field?.trim() === "")) {
@@ -99,4 +99,41 @@ const updateUserDetail = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser, allUsers, getUser, updateUserDetail };
+const newCreatedPassword = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if ([email, password].some((field) => field?.trim() === "")) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.password = password;
+    const updatedDetails = await user.save();
+
+    if (!updatedDetails) {
+      return res
+        .status(500)
+        .json({ message: "Something went wrong while updating your data" });
+    }
+
+    return res.status(200).json({
+      message: "Your data is updated successfully",
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+export {
+  registerUser,
+  loginUser,
+  allUsers,
+  getUser,
+  updateUserDetail,
+  newCreatedPassword,
+};

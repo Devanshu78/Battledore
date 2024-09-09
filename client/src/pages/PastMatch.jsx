@@ -27,7 +27,7 @@ function PastMatch() {
         Past Matches
       </h1>
       <hr />
-      <div>
+      <div className="h-[80%] overflow-y-auto ">
         {pastEvents?.map((event) => (
           <div key={event._id}>
             <EventList event={event} option={false} />

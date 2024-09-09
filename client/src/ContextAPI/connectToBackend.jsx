@@ -51,6 +51,40 @@ export const BackendProvider = ({ children }) => {
     }
   };
 
+  const forgotPassword = async (to) => {
+    try {
+      const response = await fetch(`${server}/forgotpassword`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(to),
+      });
+      const data = await response.json();
+      response.ok ? toast.success(data?.message) : toast.error(data?.message);
+      return data?.otp;
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  const newCreatedPassword = async (detail) => {
+    try {
+      const response = await fetch(`${server}/newcreatedpassword`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(detail),
+      });
+      const data = await response.json();
+      response.ok ? toast.success(data?.message) : toast.error(data?.message);
+      return response;
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
   const gettAllUser = async () => {
     try {
       const response = await fetch(`${server}/players`, {
@@ -197,6 +231,8 @@ export const BackendProvider = ({ children }) => {
         getYourData,
         myData,
         updateMyData,
+        forgotPassword,
+        newCreatedPassword,
       }}
     >
       {children}

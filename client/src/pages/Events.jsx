@@ -100,7 +100,7 @@ function Events() {
         <form
           id="eventbox"
           onSubmit={handleSubmit}
-          className="rounded-3xl shadow-xl p-5 bg-white w-[550px] fixed top-[30%] left-[28%] translate-x-[20%] translate-y-[30%] flex flex-col gap-5"
+          className="rounded-3xl shadow-xl p-5 bg-white w-[95%] md:w-[80%] lg:w-[500px] absolute left-1/2 -translate-x-1/2 top-1/4 flex flex-col gap-5"
         >
           <h1 className="text-xl font-semibold">Event details</h1>
           <input
@@ -139,7 +139,7 @@ function Events() {
             placeholder="Additional info"
             className="outline-none border-b border-black px-4 py-2 mr-4 "
           />
-          <div className="flex justify-between px-4 items-center">
+          <div className="flex justify-between px-0 md:px-4 items-center">
             <button
               className=" border-[1px] border-black px-4 py-1 rounded-2xl"
               type="submit"
@@ -160,8 +160,8 @@ function Events() {
           </div>
         </form>
       )}
-      <div className="mt-10 px-5">
-        <ul className="flex justify-between text-xl text-white">
+      <div className="mt-10 px-2 md:px-5">
+        <ul className="flex justify-between text-base md:text-xl text-white">
           <li>
             <NavLink
               to=""
@@ -196,7 +196,9 @@ function Events() {
       </div>
       <p className=" mt-3 border-b-2 w-full"></p>
 
-      <Outlet />
+      <div className="overflow-y-auto pr-6 h-3/4">
+        <Outlet />
+      </div>
     </>
   );
 }

@@ -36,7 +36,7 @@ function Login() {
 
   return (
     <>
-      <div className="w-full h-full min-h-screen bg-[url('./badminton.jpg')] bg-bottom bg-cover bg-no-repeat">
+      <div className="h-screen bg-[url('./badminton.jpg')] bg-bottom bg-cover bg-no-repeat">
         <div className="absolute top-[4rem] left-[6rem]">
           <button onClick={() => Navigate("/")}>
             <svg
@@ -50,7 +50,7 @@ function Login() {
             </svg>
           </button>
         </div>
-        <div className="w-[44rem] left-24 relative top-[10rem] bg-[#5ea0b8] rounded-[80px] py-[4rem] px-[4rem] ">
+        <div className="w-[90%] lg:w-[44rem] left-4 md:left-10  lg:left-24 relative top-[10rem] bg-[#5ea0b8] rounded-[50px] md:rounded-[80px] p-[2rem] md:p-[4rem]">
           <div className="flex flex-col justify-between min-h-[300px]">
             <div>
               <h1 className="text-4xl text-white font-bold font-inter">
