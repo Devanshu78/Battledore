@@ -14,7 +14,7 @@ To run the project, follow these steps:
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/your-repo/battledore.git
+   git clone https://github.com/Devanshu78/Battledore
    cd battledore
    ```
 
@@ -22,9 +22,9 @@ To run the project, follow these steps:
    Navigate to both the `client` and `server` directories and install the necessary dependencies:
 
    ```bash
-   cd client
+   cd ./client
    npm install
-   cd ../server
+   cd ./server
    npm install
    ```
 
