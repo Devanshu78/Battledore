@@ -13,7 +13,7 @@ function Events() {
   const [numberofDays, setNumberofDays] = useState("");
   const [isVisble, setIsVisble] = useState(false);
 
-  const { setEvent } = useBackendService();
+  const { setEvent, myData } = useBackendService();
 
   const [eventss, setEvents] = useState({
     eventTitle: "",
@@ -86,7 +86,7 @@ function Events() {
         </button>
       </div>
       <div>
-        {showCalendar && (
+        {showCalendar && myData.isOperator && (
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateCalendar
               onChange={handleDateChange}

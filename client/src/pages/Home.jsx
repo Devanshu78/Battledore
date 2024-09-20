@@ -1,12 +1,16 @@
+import { useBackendService } from "../ContextAPI/connectToBackend.jsx";
 import React from "react";
 
 function Home() {
-  const userName = localStorage.getItem("username");
+  const { myData } = useBackendService();
+
   return (
     <div>
       <h3 className="mt-20 text-3xl md:text-4xl text-white mb-3 flex flex-col md:flex-row md:gap-2">
         Hello,
-        <span className="text-[#B1D848] uppercase font-bold">{userName}</span>
+        <span className="text-[#B1D848] uppercase font-bold">
+          {myData.username}
+        </span>
       </h3>
       <p className="border-b-2 w-1/2"></p>
       <div className="w-[95%] bg-[#7CB6CB] min-w-[250px] min-h-[500px] rounded-[50px] md:rounded-[106px] px-8 md:px-16 py-5 mt-10 md:mt-24">

@@ -1,9 +1,16 @@
+import { useEffect } from "react";
 import Navbar from "./components/Navbar.jsx";
 import { Outlet } from "react-router-dom";
 import { useBackendService } from "./ContextAPI/connectToBackend";
 
 function App() {
-  const { token } = useBackendService();
+  const { token, getYourData, myData } = useBackendService();
+
+  useEffect(() => {
+    getYourData();
+  }, []);
+
+  useEffect(() => {}, [myData]);
 
   return (
     <>

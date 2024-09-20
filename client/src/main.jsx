@@ -20,6 +20,8 @@ import {
   Courts,
   Setting,
   ForgotPassword,
+  Game,
+  ScorePage,
 } from "./pages/pages.js";
 import {
   createBrowserRouter,
@@ -44,10 +46,12 @@ const router = createBrowserRouter(
           <Route path="weekely" element={<Weekely_Event />} />
           <Route path="upcoming" element={<Upcoming_Event />} />
         </Route>
+        <Route path="game/:eventId" element={<Game />} />
         <Route path="pastmatches" element={<PastMatch />} />
         <Route path="courts" element={<Courts />} />
         <Route path="user/setting" element={<Setting />} />
       </Route>
+      <Route path="scorepage/:id" element={<ScorePage />} />
     </>
   )
 );

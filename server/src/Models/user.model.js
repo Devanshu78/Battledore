@@ -9,6 +9,7 @@ const userSchema = new Schema(
       required: true,
       lowercase: true,
       trim: true,
+      enum: ["match operator", "umpire", "match controller"],
     },
     username: {
       type: String,
@@ -27,6 +28,14 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: [true, "password is required"],
+    },
+    isUmpire: {
+      type: Boolean,
+      default: false,
+    },
+    isOperator: {
+      type: Boolean,
+      default: false,
     },
   },
   {

@@ -13,6 +13,13 @@ function Signup() {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [dropDown, setDropDown] = useState(false);
+  const token = localStorage.getItem("token");
+
+  const handleRole = (role) => {
+    signupdata.jobrole = `${role}`;
+    setDropDown(false);
+  };
 
   const handleSignup = (e) => {
     setSignupdata({
@@ -23,6 +30,9 @@ function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (token) {
+      localStorage.removeItem("token");
+    }
     const response = await signup(signupdata);
     setSignupdata({
       jobrole: "",
@@ -56,7 +66,7 @@ function Signup() {
                 CREATE <span className="text-[#B1D848]">ACCOUNT </span>{" "}
               </h1>
             </div>
-            <div className="flex flex-col justify-between gap-7 font-inter">
+            <div className="flex flex-col justify-between gap-7 font-inter relative">
               <div className="flex border-b-2 pb-1 text-white">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -72,10 +82,33 @@ function Signup() {
                   name="jobrole"
                   value={signupdata.jobrole}
                   onChange={handleSignup}
+                  onClick={() => setDropDown(true)}
                   placeholder="Job Position"
                   className="bg-transparent outline-none border-none px-6 w-3/4 placeholder:text-white"
                 />
               </div>
+              {dropDown && (
+                <div className="border bg-white w-[85%] absolute left-9 top-5 m-auto rounded-3xl px-5 py-3 text-xl font-inter cursor-pointer">
+                  <div
+                    className="border-b-2 opacity-80"
+                    onClick={() => handleRole("Match Controller")}
+                  >
+                    Match Controller
+                  </div>
+                  <div
+                    className="border-b-2 opacity-80"
+                    onClick={() => handleRole("Umpire")}
+                  >
+                    Umpire
+                  </div>
+                  <div
+                    className="opacity-80"
+                    onClick={() => handleRole("Match Operator")}
+                  >
+                    Match Operator
+                  </div>
+                </div>
+              )}
               <div className="flex border-b-2 pb-1 text-white">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

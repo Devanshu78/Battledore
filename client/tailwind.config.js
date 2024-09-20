@@ -5,6 +5,7 @@ export default {
     extend: {
       backgroundImage: {
         "back-drop": "url(./badminton.jpg)",
+        "badminton-court": "url('./badminton_court.jpg')",
       },
       fontFamily: {
         inter: ["Inter", "sans-serif"],
