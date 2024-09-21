@@ -16,7 +16,6 @@ export const BackendProvider = ({ children }) => {
   const [onGoingGameId, setOnGoingGameId] = useState("");
 
   // All user functions
-
   const signup = async (userData) => {
     try {
       const response = await fetch(`${server}/signup`, {
@@ -157,7 +156,6 @@ export const BackendProvider = ({ children }) => {
   };
 
   // events
-
   const setEvent = async (event) => {
     try {
       const response = await fetch(`${server}/events/post`, {
@@ -276,6 +274,24 @@ export const BackendProvider = ({ children }) => {
     }
   };
 
+  const updateScores = async (winner, gameId) => {
+    try {
+      const response = await fetch(`${server}/winner/${gameId}`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(winner),
+      });
+      const data = await response.json();
+      response.ok ? toast.success(data?.message) : toast.error(data?.message);
+      return response;
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   // Delete Played or Not Played Match
   const removeMatch = async (matchId) => {
     try {
@@ -323,6 +339,7 @@ export const BackendProvider = ({ children }) => {
         removeMatch,
         getMatchData,
         onGoingGameId,
+        updateScores,
       }}
     >
       {children}

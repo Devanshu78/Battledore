@@ -1,4 +1,5 @@
 import { Match } from "../Models/matchs.model.js";
+import { getIO } from "../app.js";
 
 const addMatch = async (req, res) => {
   try {
@@ -82,9 +83,26 @@ const getMatchs = async (req, res) => {
 
 const updateMatch = async (req, res) => {
   try {
-    return res
-      .status(500)
-      .json({ message: "This feature is under development" });
+    const { winner, firstTeamScore, secondTeamScore } = req.body;
+    const { matchId } = req.params;
+
+    const updatedMatch = await Match.findByIdAndUpdate(
+      { _id: matchId },
+      {
+        winner,
+        firstTeamScore,
+        secondTeamScore,
+        isPlayed: true,
+      },
+      {
+        new: true,
+      }
+    );
+    if (!updatedMatch) {
+      return res.status(404).json({ message: "Match details not found" });
+    }
+
+    return res.status(200).json({ message: "Match Ends" });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
   }

@@ -1,17 +1,88 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useBackendService } from "../ContextAPI/connectToBackend";
+import io from "socket.io-client";
+
+const socket = io(`${import.meta.env.VITE_SERVER}`);
 
 function ScorePage() {
-  const { getMatchData, matchData } = useBackendService();
+  const { getMatchData, matchData, updateScores } = useBackendService();
   const gameId = useParams();
+  const Navigate = useNavigate();
   useEffect(() => {
     getMatchData(gameId);
   }, []);
   useEffect(() => {}, [matchData]);
 
-  const [teamOneScore, setTeamOneScore] = useState("01");
-  const [teamTwoScore, setTeamTwoScore] = useState("01");
+  const [teamOneScore, setTeamOneScore] = useState("1");
+  const [teamTwoScore, setTeamTwoScore] = useState("1");
+
+  const sendScore = (f_score, s_score) => {
+    socket.emit("update_score", {
+      teamonescore: f_score,
+      teamtwoscore: s_score,
+    });
+  };
+
+  useEffect(() => {
+    sendScore(teamOneScore, teamTwoScore);
+  }, []);
+
+  const handleButtonClick = (team) => {
+    if (team === "teamOne") {
+      const newTeamOneScore = (parseInt(teamOneScore) + 1).toString();
+      setTeamOneScore(newTeamOneScore);
+      sendScore(newTeamOneScore, teamTwoScore);
+    } else if (team === "teamTwo") {
+      const newTeamTwoScore = (parseInt(teamTwoScore) + 1).toString();
+      setTeamTwoScore(newTeamTwoScore);
+      sendScore(teamOneScore, newTeamTwoScore);
+    } else if ((team = "undo")) {
+      let newTeamOneScore;
+      let newTeamTwoScore;
+      if (parseInt(teamOneScore) > 1 && parseInt(teamTwoScore) > 1) {
+        newTeamOneScore = (parseInt(teamOneScore) - 1).toString();
+        newTeamTwoScore = (parseInt(teamTwoScore) - 1).toString();
+        setTeamOneScore(newTeamOneScore);
+        setTeamTwoScore(newTeamTwoScore);
+        sendScore(newTeamOneScore, newTeamTwoScore);
+      } else if (parseInt(teamOneScore) > 1) {
+        newTeamOneScore = (parseInt(teamOneScore) - 1).toString();
+        setTeamOneScore(newTeamOneScore);
+        sendScore(newTeamOneScore, teamTwoScore);
+      } else if (parseInt(teamTwoScore) > 1) {
+        newTeamTwoScore = (parseInt(teamTwoScore) - 1).toString();
+        setTeamTwoScore(newTeamTwoScore);
+        sendScore(teamOneScore, newTeamTwoScore);
+      }
+    }
+  };
+
+  const endMatchSession = async () => {
+    /* 
+    winner , firstTeamName , secondTeamName
+    */
+    let winner = "";
+    if (teamOneScore > teamTwoScore) {
+      winner = `${matchData.firstTeamName} wins`;
+    } else if (teamOneScore < teamTwoScore) {
+      winner = `${matchData.secondTeamName} wins`;
+    } else {
+      winner = "DRAW";
+    }
+
+    const temp = {
+      winner,
+      firstTeamScore: teamOneScore,
+      secondTeamScore: teamTwoScore,
+    };
+
+    const res = await updateScores(temp, gameId.id);
+    if (res.ok) {
+      socket.disconnect();
+      Navigate("/livescore");
+    }
+  };
 
   return (
     <>
@@ -45,12 +116,7 @@ function ScorePage() {
           </div>
           <button
             className="text-3xl text-white font-bold rounded-3xl px-5 py-3 bg-[#7cb6cb] m-4 w-48 flex justify-center items-center shadow-lg"
-            onClick={() => {
-              if (teamOneScore != 1 && teamTwoScore != 1) {
-                setTeamOneScore((parseInt(teamOneScore) - 1).toString());
-                setTeamTwoScore((parseInt(teamTwoScore) - 1).toString());
-              }
-            }}
+            onClick={() => handleButtonClick("undo")}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -62,7 +128,12 @@ function ScorePage() {
               <path d="M280-200v-80h284q63 0 109.5-40T720-420q0-60-46.5-100T564-560H312l104 104-56 56-200-200 200-200 56 56-104 104h252q97 0 166.5 63T800-420q0 94-69.5 157T564-200H280Z" />
             </svg>
           </button>
-          <button className="text-3xl text-white font-bold rounded-3xl px-5 py-3 bg-[#7cb6cb] m-4 w-48 flex justify-center items-center shadow-lg">
+          <button
+            className="text-3xl text-white font-bold rounded-3xl px-5 py-3 bg-[#7cb6cb] m-4 w-48 flex justify-center items-center shadow-lg"
+            onClick={() => {
+              endMatchSession();
+            }}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="50px"
@@ -85,13 +156,11 @@ function ScorePage() {
           {/* Court */}
           <div
             className="w-[120%] h-[30rem] lg:h-[40rem] relative -left-[4rem] lg:-left-[5rem] 
-          bg-[url('./badminton_court.jpg')] bg-cover bg-no-repeat bg-center flex shadow-lg"
+          bg-[url('./../badminton_court.jpg')] bg-cover bg-no-repeat bg-center flex shadow-lg"
           >
             <button
               className="absolute top-[40%] -left-5 lg:-left-20 p-5 lg:p-10 rounded-2xl text-3xl text-white bg-[#7cb6cb] shadow-lg"
-              onClick={() =>
-                setTeamOneScore((parseInt(teamOneScore) + 1).toString())
-              }
+              onClick={() => handleButtonClick("teamOne")}
             >
               Score
             </button>
@@ -117,9 +186,7 @@ function ScorePage() {
             </div>
             <button
               className="absolute top-[40%] -right-5 lg:-right-20 p-5 lg:p-10 rounded-2xl text-3xl text-white bg-[#7cb6cb] shadow-lg"
-              onClick={() =>
-                setTeamTwoScore((parseInt(teamTwoScore) + 1).toString())
-              }
+              onClick={() => handleButtonClick("teamTwo")}
             >
               Score
             </button>
