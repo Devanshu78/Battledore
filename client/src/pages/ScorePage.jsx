@@ -17,26 +17,28 @@ function ScorePage() {
   const [teamOneScore, setTeamOneScore] = useState("1");
   const [teamTwoScore, setTeamTwoScore] = useState("1");
 
-  const sendScore = (f_score, s_score) => {
+  const sendScore = (f_score, s_score, isActive, winner) => {
     socket.emit("update_score", {
       teamonescore: f_score,
       teamtwoscore: s_score,
+      status: isActive,
+      won: winner,
     });
   };
 
   useEffect(() => {
-    sendScore(teamOneScore, teamTwoScore);
+    sendScore(teamOneScore, teamTwoScore, "notStart");
   }, []);
 
   const handleButtonClick = (team) => {
     if (team === "teamOne") {
       const newTeamOneScore = (parseInt(teamOneScore) + 1).toString();
       setTeamOneScore(newTeamOneScore);
-      sendScore(newTeamOneScore, teamTwoScore);
+      sendScore(newTeamOneScore, teamTwoScore, "start");
     } else if (team === "teamTwo") {
       const newTeamTwoScore = (parseInt(teamTwoScore) + 1).toString();
       setTeamTwoScore(newTeamTwoScore);
-      sendScore(teamOneScore, newTeamTwoScore);
+      sendScore(teamOneScore, newTeamTwoScore, "start");
     } else if ((team = "undo")) {
       let newTeamOneScore;
       let newTeamTwoScore;
@@ -45,15 +47,15 @@ function ScorePage() {
         newTeamTwoScore = (parseInt(teamTwoScore) - 1).toString();
         setTeamOneScore(newTeamOneScore);
         setTeamTwoScore(newTeamTwoScore);
-        sendScore(newTeamOneScore, newTeamTwoScore);
+        sendScore(newTeamOneScore, newTeamTwoScore, "start");
       } else if (parseInt(teamOneScore) > 1) {
         newTeamOneScore = (parseInt(teamOneScore) - 1).toString();
         setTeamOneScore(newTeamOneScore);
-        sendScore(newTeamOneScore, teamTwoScore);
+        sendScore(newTeamOneScore, teamTwoScore, "start");
       } else if (parseInt(teamTwoScore) > 1) {
         newTeamTwoScore = (parseInt(teamTwoScore) - 1).toString();
         setTeamTwoScore(newTeamTwoScore);
-        sendScore(teamOneScore, newTeamTwoScore);
+        sendScore(teamOneScore, newTeamTwoScore, "start");
       }
     }
   };
@@ -79,14 +81,14 @@ function ScorePage() {
 
     const res = await updateScores(temp, gameId.id);
     if (res.ok) {
-      socket.disconnect();
       Navigate("/livescore");
+      sendScore(teamOneScore, teamTwoScore, "end", winner);
     }
   };
 
   return (
     <>
-      <div className="h-screen w-[90%] lg:w-[70%] m-auto font-inter">
+      <div className="h-screen w-[80%] m-auto font-inter">
         {/* Top Section Button */}
         <div className="flex justify-center items-center">
           <div className="text-3xl text-white font-bold rounded-3xl py-3 px-2 bg-[rgb(124,182,203)] m-4 flex justify-center items-center shadow-lg">
@@ -147,45 +149,62 @@ function ScorePage() {
         </div>
 
         {/* Main Section */}
-        <div className="w-[85%] lg:w-[60%] m-auto h-[79%] lg:h-[88%] bg-white rounded-3xl">
+        <div className="w-[85%] lg:w-[60%] m-auto h-auto bg-white rounded-3xl">
           {/* Score */}
           <div className="px-10 text-[2.5rem] lg:text-[3rem] text-[#7cb6cb] flex justify-between">
             <span>{`${teamOneScore}`}</span>
             <span>{`${teamTwoScore}`}</span>
           </div>
           {/* Court */}
-          <div
-            className="w-[120%] h-[30rem] lg:h-[40rem] relative -left-[4rem] lg:-left-[5rem] 
-          bg-[url('./../badminton_court.jpg')] bg-cover bg-no-repeat bg-center flex shadow-lg"
-          >
+          <div className=" w-[95%] md:w-[105%] lg:w-[135%] xl:w-[120%] 2xl:w-[130%] h-[20rem] md:h-[25rem] lg:h-[30rem] xl:h-[30rem] 2xl:h-[40rem] relative  left-4 md:-left-[0.75rem] lg:-left-[5rem] xl:-left-[2rem] 2xl:-left-[10rem] bg-[url('./../badminton_court.jpg')] bg-cover bg-no-repeat bg-center flex shadow-lg">
             <button
-              className="absolute top-[40%] -left-5 lg:-left-20 p-5 lg:p-10 rounded-2xl text-3xl text-white bg-[#7cb6cb] shadow-lg"
+              className="absolute top-[40%] -left-5 lg:-left-10 xl:-left-20 p-4 lg:p-6 xl:p-10 rounded-2xl text-xl xl:text-3xl text-white bg-[#7cb6cb] shadow-lg"
               onClick={() => handleButtonClick("teamOne")}
             >
               Score
             </button>
-            <div className="w-full text-xl lg:text-3xl text-white flex flex-col justify-evenly items-center">
+            <div className="w-full text-xl lg:text-xl xl:text-3xl text-white flex flex-col justify-evenly items-center">
               <div>
-                <h1>{matchData?.playerone}</h1>
-                <p>({matchData?.firstTeamName})</p>
+                <h1 className="text-xl xl:text-3xl">
+                  {matchData?.playerone?.toUpperCase()}
+                </h1>
+                <p className="text-base xl:text-3xl">
+                  ({matchData?.firstTeamName})
+                </p>
               </div>
-              <div>
-                <h1>{matchData?.playerthree}</h1>
-                <p>({matchData?.firstTeamName})</p>
-              </div>
+              {matchData?.playerthree && (
+                <div>
+                  <h1 className="text-xl xl:text-3xl">
+                    {matchData?.playerthree?.toUpperCase()}
+                  </h1>
+                  <p className=" text-base xl:text-3xl">
+                    ({matchData?.firstTeamName})
+                  </p>
+                </div>
+              )}
             </div>
-            <div className="w-full text-xl lg:text-3xl text-white flex flex-col justify-evenly items-center">
+            <div className="w-full text-white flex flex-col justify-evenly items-center">
               <div>
-                <h1>{matchData?.playertwo}</h1>
-                <p>({matchData?.secondTeamName})</p>
+                <h1 className="text-xl xl:text-3xl">
+                  {matchData?.playertwo?.toUpperCase()}
+                </h1>
+                <p className=" text-base xl:text-3xl">
+                  ({matchData?.secondTeamName})
+                </p>
               </div>
-              <div>
-                <h1>{matchData?.playerfour}</h1>
-                <p>({matchData?.secondTeamName})</p>
-              </div>
+              {matchData?.playerfour && (
+                <div>
+                  <h1 className="text-xl xl:text-3xl">
+                    {matchData?.playerfour?.toUpperCase()}
+                  </h1>
+                  <p className=" text-base xl:text-3xl">
+                    ({matchData?.secondTeamName})
+                  </p>
+                </div>
+              )}
             </div>
             <button
-              className="absolute top-[40%] -right-5 lg:-right-20 p-5 lg:p-10 rounded-2xl text-3xl text-white bg-[#7cb6cb] shadow-lg"
+              className="absolute top-[40%] -right-5 lg:-right-10 xl:-right-20 p-4 lg:p-6 xl:p-10 rounded-2xl text-xl xl:text-3xl text-white bg-[#7cb6cb] shadow-lg"
               onClick={() => handleButtonClick("teamTwo")}
             >
               Score
@@ -231,7 +250,7 @@ function ScorePage() {
               </div>
 
               <div className="border w-[110%] relative -left-5 border-[#5ea0b8]"></div>
-              <div>
+              <div className="pb-5">
                 <div className="flex justify-between">
                   {`${matchData?.playertwo}`}
                   <div className="flex">
@@ -287,7 +306,7 @@ function ScorePage() {
                   </div>
                 </div>
                 <div className="border w-[110%] relative -left-5 border-[#5ea0b8]"></div>
-                <div className="flex justify-between border border-b-[#5ea0b8]">
+                <div className="flex justify-between border border-b-[#5ea0b8] pb-5">
                   {`${matchData?.playertwo}`}
                   <div className="flex">
                     <div className="w-5 border border-l-[#5ea0b8] border-r-[#5ea0b8] opacity-70"></div>

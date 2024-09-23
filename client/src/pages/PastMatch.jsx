@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
 function PastMatch() {
-  const { getEvent, eventList, numberOfEvents } = useBackendService();
+  const { getEvents, eventList, numberOfEvents } = useBackendService();
   dayjs.extend(customParseFormat);
 
   const oneMonthAgo = dayjs().subtract(1, "month").startOf("day");
@@ -18,7 +18,7 @@ function PastMatch() {
   });
 
   useEffect(() => {
-    getEvent();
+    getEvents();
   }, [numberOfEvents]);
 
   return (

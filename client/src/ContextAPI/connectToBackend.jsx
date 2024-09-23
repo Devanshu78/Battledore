@@ -13,7 +13,6 @@ export const BackendProvider = ({ children }) => {
   const [numberOfUsers, setNumberofUsers] = useState("");
   const [numberofMatches, setNumberofMatches] = useState("");
   const [matchData, setMatchData] = useState("");
-  const [onGoingGameId, setOnGoingGameId] = useState("");
 
   // All user functions
   const signup = async (userData) => {
@@ -174,7 +173,7 @@ export const BackendProvider = ({ children }) => {
     }
   };
 
-  const getEvent = async () => {
+  const getEvents = async () => {
     try {
       const response = await fetch(`${server}/events`, {
         headers: {
@@ -184,6 +183,7 @@ export const BackendProvider = ({ children }) => {
       const data = await response.json();
       setEventList(data.events);
       setNumberofEvents(data.events.length);
+      return data.events;
     } catch (error) {
       console.log("Unable to fetch all events", error.message);
     }
@@ -321,7 +321,7 @@ export const BackendProvider = ({ children }) => {
         logOut,
         token,
         eventList,
-        getEvent,
+        getEvents,
         updateEvent,
         numberOfEvents,
         setNumberofEvents,
@@ -338,7 +338,6 @@ export const BackendProvider = ({ children }) => {
         getScoresData,
         removeMatch,
         getMatchData,
-        onGoingGameId,
         updateScores,
       }}
     >

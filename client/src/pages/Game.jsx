@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import { useBackendService } from "../ContextAPI/connectToBackend";
@@ -87,118 +87,124 @@ function Game() {
   return (
     <>
       <div>
-        <h3 className="mt-20 text-3xl md:text-4xl text-white mb-3 flex flex-col md:flex-row md:gap-2">
+        <h3 className="mt-1 text-3xl md:text-4xl text-white mb-3 flex gap-2">
           Game,
           <span className="text-[#B1D848] uppercase font-bold">ONN</span>
         </h3>
         <p className="border-b-2 w-1/2"></p>
-        <div className="w-[90%] lg:w-[45%] bg-[#7CB6CB] min-w-[250px] min-h-[500px] rounded-[50px] md:rounded-[50px] lg:rounded-[96px] px-8 lg:px-16 py-5 mt-5 lg:mt-10 flex flex-col gap-5">
-          <h1 className="text-xl md:text-3xl text-white">Start</h1>
-          <input
-            type="text"
-            placeholder="Select Court"
-            name="eventPlace"
-            value={gameState.eventPlace}
-            onChange={handleChange}
-            className="px-5 outline-none py-2 rounded-3xl"
-          />
-          <input
-            type="text"
-            placeholder="Single or Doubles"
-            name="numberofplayer"
-            value={gameState.numberofplayer}
-            onChange={handleChange}
-            className="px-5 outline-none py-2 rounded-3xl"
-          />
-
-          <div className="flex gap-7 lg:gap-2 flex-col lg:flex-row">
-            <div className="w-full flex flex-col gap-2">
-              <input
-                type="text"
-                placeholder="First Team Name"
-                name="firstTeamName"
-                value={gameState.firstTeamName}
-                onChange={handleChange}
-                className="px-5 outline-none py-2 rounded-3xl"
-              />
-              <input
-                type="text"
-                placeholder="Player 1"
-                name="playerone"
-                value={gameState.playerone}
-                onChange={handleChange}
-                className="px-5 outline-none py-2 rounded-3xl"
-              />
-              {gameState.numberofplayer === "doubles" ? (
-                <input
-                  type="text"
-                  placeholder="Player 2"
-                  name="playerthree"
-                  value={gameState.playerthree}
-                  onChange={handleChange}
-                  className="px-5 outline-none py-2 rounded-3xl"
-                />
-              ) : null}
-            </div>
-            <div className="w-full flex flex-col gap-2">
-              <input
-                type="text"
-                placeholder="Second Team Name"
-                name="secondTeamName"
-                value={gameState.secondTeamName}
-                onChange={handleChange}
-                className="px-5 outline-none py-2 rounded-3xl"
-              />
-              <input
-                type="text"
-                placeholder="Player 1"
-                name="playertwo"
-                value={gameState.playertwo}
-                onChange={handleChange}
-                className="px-5 outline-none py-2 rounded-3xl"
-              />
-              {gameState.numberofplayer === "doubles" ? (
-                <input
-                  type="text"
-                  placeholder="Player 2"
-                  name="playerfour"
-                  value={gameState.playerfour}
-                  onChange={handleChange}
-                  className="px-5 outline-none py-2 rounded-3xl"
-                />
-              ) : null}
-            </div>
-          </div>
-
-          <div className="flex items-start lg:items-center gap-2 flex-col lg:flex-row">
-            <span className="font-base text-xl text-nowrap"> Stricker : </span>
+        <div className="w-[90%] lg:w-[95%] xl:w-[50%] bg-[#7CB6CB] min-w-[250px] min-h-[300px] rounded-[10px] md:rounded-[50px] lg:rounded-[96px] px-4 py-3 md:px-6 md:py-4 lg:px-8 lg:py-8 mt-3 lg:mt-10 ">
+          <h1 className="text-xl md:text-2xl lg:text-3xl text-white">Start</h1>
+          <div className="flex flex-col gap-3 md:gap-4 lg:gap-5 overflow-y-auto">
             <input
               type="text"
-              placeholder="Select Stricker Team"
-              name="stricker"
-              value={gameState.stricker}
+              placeholder="Select Court"
+              name="eventPlace"
+              value={gameState.eventPlace}
               onChange={handleChange}
-              className="outline-none px-5 py-2 rounded-3xl w-full"
+              className="px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-2 outline-none rounded-3xl w-full h-8 sm:h-10"
             />
-          </div>
-          <div className="flex items-start lg:items-center gap-2 flex-col lg:flex-row">
-            <span className="font-base text-xl text-nowrap"> Reciver : </span>
             <input
               type="text"
-              placeholder="Select Reciver Team"
-              name="reciver"
-              value={gameState.reciver}
+              placeholder="Single or Doubles"
+              name="numberofplayer"
+              value={gameState.numberofplayer}
               onChange={handleChange}
-              className="outline-none px-5 py-2 rounded-3xl w-full"
+              className="px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-2 outline-none rounded-3xl w-full h-8 sm:h-10"
             />
-          </div>
-          <div className="text-center">
-            <button
-              onClick={handleStartGame}
-              className="border border-green-500 bg-green-500 text-xl rounded-xl py-2 px-5 text-white scale-95 hover:scale-100"
-            >
-              Start Game
-            </button>
+
+            <div className="flex flex-col md:flex-row gap-3 md:gap-2 lg:gap-5">
+              <div className="w-full flex flex-col gap-2 ">
+                <input
+                  type="text"
+                  placeholder="First Team Name"
+                  name="firstTeamName"
+                  value={gameState.firstTeamName}
+                  onChange={handleChange}
+                  className="px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-2 outline-none rounded-3xl w-full h-8 sm:h-10"
+                />
+                <input
+                  type="text"
+                  placeholder="Player 1"
+                  name="playerone"
+                  value={gameState.playerone}
+                  onChange={handleChange}
+                  className="px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-2 outline-none rounded-3xl w-full h-8 sm:h-10"
+                />
+                {gameState.numberofplayer === "doubles" && (
+                  <input
+                    type="text"
+                    placeholder="Player 2"
+                    name="playerthree"
+                    value={gameState.playerthree}
+                    onChange={handleChange}
+                    className="px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-2 outline-none rounded-3xl w-full h-8 sm:h-10"
+                  />
+                )}
+              </div>
+              <div className="w-full flex flex-col gap-2">
+                <input
+                  type="text"
+                  placeholder="Second Team Name"
+                  name="secondTeamName"
+                  value={gameState.secondTeamName}
+                  onChange={handleChange}
+                  className="px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-2 outline-none rounded-3xl w-full h-8 sm:h-10"
+                />
+                <input
+                  type="text"
+                  placeholder="Player 1"
+                  name="playertwo"
+                  value={gameState.playertwo}
+                  onChange={handleChange}
+                  className="px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-2 outline-none rounded-3xl w-full h-8 sm:h-10"
+                />
+                {gameState.numberofplayer === "doubles" && (
+                  <input
+                    type="text"
+                    placeholder="Player 2"
+                    name="playerfour"
+                    value={gameState.playerfour}
+                    onChange={handleChange}
+                    className="px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-2 outline-none rounded-3xl w-full h-8 sm:h-10"
+                  />
+                )}
+              </div>
+            </div>
+
+            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-2">
+              <span className="font-base text-sm md:text-base lg:text-xl text-nowrap">
+                Stricker:
+              </span>
+              <input
+                type="text"
+                placeholder="Select Stricker Team"
+                name="stricker"
+                value={gameState.stricker}
+                onChange={handleChange}
+                className="outline-none px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-2 rounded-3xl w-full h-8 sm:h-10"
+              />
+            </div>
+            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-2">
+              <span className="font-base text-sm md:text-base lg:text-xl text-nowrap">
+                Reciver:
+              </span>
+              <input
+                type="text"
+                placeholder="Select Reciver Team"
+                name="reciver"
+                value={gameState.reciver}
+                onChange={handleChange}
+                className="outline-none px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-2 rounded-3xl w-full h-8 sm:h-10"
+              />
+            </div>
+            <div className="text-center">
+              <button
+                onClick={handleStartGame}
+                className="border border-green-500 bg-green-500 text-xl rounded-xl py-2 px-5 text-white scale-95 hover:scale-100"
+              >
+                Start Game
+              </button>
+            </div>
           </div>
         </div>
       </div>

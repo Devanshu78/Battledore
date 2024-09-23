@@ -12,27 +12,29 @@ function Courts() {
         Courts
       </h1>
       <hr />
-      <div className="flex">
-        {courts.map((court) => (
-          <div
-            key={court.id}
-            className="mt-4 h-[75%] md:h-auto md:flex gap-10 md:justify-center overflow-y-auto"
-          >
-            <div className="rounded-3xl bg-[#7CB6CB] p-3 m-4 font-inter flex flex-col gap-4">
+      <div className="mt-8 w-[90%] h-[65vh] sm:h-auto overflow-y-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {courts.map((court) => (
+            <div
+              key={court.id}
+              className="max-w-sm rounded-3xl overflow-hidden shadow-lg bg-[#7CB6CB] p-2 md:p-4 font-inter"
+            >
               <img
-                className="rounded-3xl h-1/2"
+                className="w-36 xs:w-48 md:w-full rounded-xl"
                 src={`../${court.name}.jpg`}
-                alt={court.name}
+                alt=""
               />
-              <div className="flex flex-col px-4">
-                <p className="font-medium text-3xl text-white">{court.name}</p>
-                <p className="font-light text-xl opacity-70">
+              <div className="px-2 sm:px-6 py-1 sm:py-4 text-white">
+                <div className="font-bold text-xl mb-2">
+                  {court.name.toUpperCase()}
+                </div>
+                <p className="text-gray-700 text-base">
                   ${court.price} per/match
                 </p>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </>
   );

@@ -15,7 +15,7 @@ function App() {
   return (
     <>
       {token ? (
-        <div className="flex relative w-[115%] md:w-[102%] -left-[90px] md:-left-[80px] gap-2 md:gap-10">
+        <div className="flex relative h-screen w-[125%] xs:w-[120%] sm:w-[115%] md:w-[100%] -left-[90px] md:-left-[80px] gap-2 md:gap-10">
           <Navbar />
           <main className="relative w-full h-screen px-4">
             <Outlet />

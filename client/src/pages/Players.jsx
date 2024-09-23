@@ -23,25 +23,25 @@ function Players() {
           {playerList.map((player) => (
             <div
               key={player._id}
-              className="mt-4 md:mt-8 flex justify-between items-center gap-12 text-base md:text-lg font-inter"
+              className="mt-4 md:mt-8 flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-12 text-base md:text-lg font-inter"
             >
               <div
                 id="about_event"
-                className="block md:flex gap-6 w-full h-auto"
+                className="flex flex-col sm:flex-row gap-2 sm:gap-6 w-full h-auto"
               >
                 <img
-                  className="w-24   rounded-2xl"
+                  className="w-24 rounded-2xl"
                   src="../badminton.jpg"
                   alt=""
                 />
-                <div className="text-white w-full h-auto flex flex-col justify-center">
+                <div className="text-white w-full h-auto flex flex-col justify-center text-sm sm:text-base md:text-lg lg:text-xl">
                   <p className="font-light">
                     Name :{" "}
                     <span className="text-[#B1D848] font-bold uppercase  lg:text-xl">
                       {player.username}
                     </span>
                   </p>
-                  <p className="font-light">
+                  <p className="font-light text-nowrap">
                     Email : <span className="font-bold">{player.email}</span>
                   </p>
                   {myData.isOperator && (
@@ -52,7 +52,7 @@ function Players() {
                 </div>
               </div>
               {myData._id === player._id ? null : (
-                <div>
+                <div className="text-end w-full sm:w-auto">
                   {myData.isOperator && (
                     <button
                       onClick={() => removeUser(player._id)}

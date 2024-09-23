@@ -3,7 +3,7 @@ import { useBackendService } from "../ContextAPI/connectToBackend.jsx";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 
-function EventList({ event, option }) {
+function EventList({ event }) {
   const Naviagte = useNavigate();
   const { removeEvent, numberOfEvents, updateEvent, myData } =
     useBackendService();
@@ -33,24 +33,24 @@ function EventList({ event, option }) {
 
   return (
     <>
-      <div className="md:px-5">
-        <div className="mt-8 md:flex justify-between items-center gap-12">
+      <div className="px-0 md:px-5">
+        <div className="mt-3 sm:mt-8 md:flex justify-between items-center gap-12">
           <div
             id="about_event"
-            className="block lg:flex gap-2 lg:gap-6 w-full h-auto"
+            className="xs:flex lg:items-center gap-2 lg:gap-6 w-full h-auto"
           >
             <div>
               <img
-                className="w-8/12 md:w-24 lg:w-36 h-[90%] rounded-2xl"
+                className="w-24 lg:w-36 h-auto rounded-2xl"
                 src="../badminton.jpg"
                 alt=""
               />
             </div>
-            <div className="text-white text-lg">
+            <div className="text-white text-sm md:text-base lg:text-lg 2xl:text-xl">
               <input
                 type="text"
                 name="eventTitle"
-                className={`text-[#B1D848] bg-[#5ea0b8] font-bold outline-none ${
+                className={`text-[#B1D848] bg-transparent font-bold outline-none w-full ${
                   isEditable
                     ? "border border-gray-300 rounded-lg px-2"
                     : "border-transparent"
@@ -61,13 +61,13 @@ function EventList({ event, option }) {
                 }}
                 readOnly={!isEditable}
               />
-              <p>
-                {event.eventStart} to {event.eventEnd}
-              </p>
+              <div className="flex flex-col sm:flex-row sm:gap-2 sm:text-nowrap">
+                <span>{event.eventStart} </span> <span>{event.eventEnd}</span>
+              </div>
               <input
                 type="text"
                 name="eventDesc"
-                className={` outline-none bg-[#5ea0b8] w-[95%] h-auto break-keep whitespace-normal border border-gray-400 ${
+                className={` outline-none bg-transparent w-full h-auto break-keep whitespace-normal border border-gray-400 ${
                   isEditable
                     ? "border border-gray-300 rounded-lg px-2"
                     : "border-transparent"

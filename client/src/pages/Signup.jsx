@@ -60,13 +60,13 @@ function Signup() {
           </button>
         </div>
         <div className="w-[90%] lg:w-[44rem] left-4 md:left-10 lg:left-24 relative top-[10rem] bg-[#5ea0b8] rounded-[50px] md:rounded-[80px] p-[2rem] md:p-[4rem] ">
-          <div className="flex flex-col justify-between gap-20 min-h-[300px]">
+          <div className="flex flex-col justify-between gap-10 md:gap-20 min-h-[300px]">
             <div>
               <h1 className="text-4xl text-white font-bold font-inter">
                 CREATE <span className="text-[#B1D848]">ACCOUNT </span>{" "}
               </h1>
             </div>
-            <div className="flex flex-col justify-between gap-7 font-inter relative">
+            <div className="flex flex-col justify-between gap-3 sm:gap-5 md:gap-7 font-inter relative">
               <div className="flex border-b-2 pb-1 text-white">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

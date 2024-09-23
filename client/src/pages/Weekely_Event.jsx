@@ -7,7 +7,7 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
 function Weekely_Event() {
-  const { getEvent, eventList, numberOfEvents } = useBackendService();
+  const { getEvents, eventList, numberOfEvents } = useBackendService();
   dayjs.extend(isSameOrBefore);
   dayjs.extend(isSameOrAfter);
   dayjs.extend(customParseFormat);
@@ -24,7 +24,7 @@ function Weekely_Event() {
   });
 
   useEffect(() => {
-    getEvent();
+    getEvents();
   }, [numberOfEvents]);
 
   return (
