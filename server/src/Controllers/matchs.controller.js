@@ -83,15 +83,16 @@ const getMatchs = async (req, res) => {
 
 const updateMatch = async (req, res) => {
   try {
-    const { winner, firstTeamScore, secondTeamScore } = req.body;
+    // const { winner, firstTeamScore, secondTeamScore } = req.body;
+    const { winner } = req.body;
     const { matchId } = req.params;
 
     const updatedMatch = await Match.findByIdAndUpdate(
       { _id: matchId },
       {
         winner,
-        firstTeamScore,
-        secondTeamScore,
+        // firstTeamScore,
+        // secondTeamScore,
         isPlayed: true,
       },
       {

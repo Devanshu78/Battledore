@@ -23,7 +23,6 @@ function LiveScore() {
 
   useEffect(() => {
     socket.on("score_updated", (data) => {
-      console.log(data);
       setLivescore(data);
     });
 
@@ -71,15 +70,15 @@ function LiveScore() {
                     <span>Umpire : {event.referee.toUpperCase()}</span>
                   </p>
                   <p>
-                    {event.isPlayed
-                      ? event.firstTeamScore
+                    {event.isPlayed || livescore == ""
+                      ? event.scores.slice(-1)[0].firstTeamScore
                       : livescore.teamonescore}{" "}
                     <span className="text-sm font-normal">
                       ({event.firstTeamName})
                     </span>{" "}
                     |{" "}
-                    {event.isPlayed
-                      ? event.secondTeamScore
+                    {event.isPlayed || livescore == ""
+                      ? event.scores.slice(-1)[0].secondTeamScore
                       : livescore.teamtwoscore}{" "}
                     <span className="text-sm font-normal">
                       ({event.secondTeamName})
@@ -99,11 +98,12 @@ function LiveScore() {
                         ) : null}
                       </div>
                       <div>
-                        {livescore.status === "start" && (
+                        {livescore.status === "start" &&
+                        event.scores.length > 0 ? (
                           <p className="border border-blue-500 px-5 py-1 text-center bg-blue-500 rounded-xl">
                             Match is Live Now
                           </p>
-                        )}
+                        ) : null}
                       </div>
                       <div>
                         {livescore.status === "end" && (

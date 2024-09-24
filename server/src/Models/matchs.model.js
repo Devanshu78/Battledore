@@ -1,5 +1,17 @@
 import mongoose, { Schema } from "mongoose";
 
+const scoreSchema = new mongoose.Schema(
+  {
+    firstTeamScore: {
+      type: String,
+    },
+    secondTeamScore: {
+      type: String,
+    },
+  },
+  { timestamps: true }
+);
+
 const matSchema = new Schema(
   {
     eventPlace: {
@@ -44,14 +56,15 @@ const matSchema = new Schema(
       default: "no player",
       trime: true,
     },
-    firstTeamScore: {
-      type: String,
-      default: "0",
-    },
-    secondTeamScore: {
-      type: String,
-      default: "0",
-    },
+    // firstTeamScore: {
+    //   type: String,
+    //   default: "0",
+    // },
+    // secondTeamScore: {
+    //   type: String,
+    //   default: "0",
+    // },
+    scores: [scoreSchema],
     winner: {
       type: String,
       default: "not played",

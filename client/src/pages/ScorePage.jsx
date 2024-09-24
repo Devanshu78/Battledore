@@ -23,6 +23,7 @@ function ScorePage() {
       teamtwoscore: s_score,
       status: isActive,
       won: winner,
+      Id: gameId.id,
     });
   };
 
@@ -61,9 +62,6 @@ function ScorePage() {
   };
 
   const endMatchSession = async () => {
-    /* 
-    winner , firstTeamName , secondTeamName
-    */
     let winner = "";
     if (teamOneScore > teamTwoScore) {
       winner = `${matchData.firstTeamName} wins`;
@@ -75,8 +73,6 @@ function ScorePage() {
 
     const temp = {
       winner,
-      firstTeamScore: teamOneScore,
-      secondTeamScore: teamTwoScore,
     };
 
     const res = await updateScores(temp, gameId.id);
@@ -89,7 +85,7 @@ function ScorePage() {
   return (
     <>
       <div className="h-screen w-[80%] m-auto font-inter">
-        {/* Top Section Button */}
+        {/* Top Button Section */}
         <div className="flex justify-center items-center">
           <div className="text-3xl text-white font-bold rounded-3xl py-3 px-2 bg-[rgb(124,182,203)] m-4 flex justify-center items-center shadow-lg">
             <button>
@@ -292,17 +288,15 @@ function ScorePage() {
                 <div className="flex justify-between">
                   {`${matchData?.playerone}`}
                   <div className="flex">
-                    <div className="w-5 border border-l-[#5ea0b8] border-r-[#5ea0b8] opacity-70"></div>
-                    <div className="w-5 border  border-r-[#5ea0b8] opacity-70"></div>
-                    <div className="w-5 border  border-r-[#5ea0b8] opacity-70"></div>
-                    <div className="w-5 border  border-r-[#5ea0b8] opacity-70"></div>
-                    <div className="w-5 border  border-r-[#5ea0b8] opacity-70"></div>
-                    <div className="w-5 border  border-r-[#5ea0b8] opacity-70"></div>
-                    <div className="w-5 border  border-r-[#5ea0b8] opacity-70"></div>
-                    <div className="w-5 border  border-r-[#5ea0b8] opacity-70"></div>
-                    <div className="w-5 border  border-r-[#5ea0b8] opacity-70"></div>
-                    <div className="w-5 border  border-r-[#5ea0b8] opacity-70"></div>
-                    <div className="w-5 border  border-r-[#5ea0b8] opacity-70"></div>
+                    {/* {matchData?.scores?.map((score) => (
+                      <div
+                        key={score._id}
+                        className="w-5 border border-l-[#5ea0b8] border-r-[#5ea0b8] opacity-70 text-center"
+                      >
+                        {score.firstTeamScore}
+                      </div>
+                    ))} */}
+                    <div className="w-5 border border-l-[#5ea0b8] border-r-[#5ea0b8] opacity-70 text-center"></div>
                   </div>
                 </div>
                 <div className="border w-[110%] relative -left-5 border-[#5ea0b8]"></div>
