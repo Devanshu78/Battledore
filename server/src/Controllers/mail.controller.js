@@ -41,7 +41,7 @@ const email = async (req, res) => {
       text: `To reset your password use this code ${code}`,
       html: `To reset your password use this code <h3> ${code}</h3>`,
     });
-    return res.json({ otp: code, message: "Email is send" });
+    return res.json({ otp: code, message: "Email is sent" });
   }
 
   info().catch(console.error);

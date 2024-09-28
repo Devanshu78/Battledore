@@ -2,11 +2,11 @@ import React, { useEffect } from "react";
 import { useBackendService } from "../ContextAPI/connectToBackend.jsx";
 
 function Players() {
-  const { playerList, gettAllUser, numberOfUsers, myData, removeUser } =
+  const { playerList, getAllUsers, numberOfUsers, myData, removeUser } =
     useBackendService();
 
   useEffect(() => {
-    gettAllUser();
+    getAllUsers();
   }, [numberOfUsers]);
 
   return (

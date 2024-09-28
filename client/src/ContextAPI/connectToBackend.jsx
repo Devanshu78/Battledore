@@ -67,9 +67,9 @@ export const BackendProvider = ({ children }) => {
     }
   };
 
-  const newCreatedPassword = async (detail) => {
+  const createNewPassword = async (detail) => {
     try {
-      const response = await fetch(`${server}/newcreatedpassword`, {
+      const response = await fetch(`${server}/createNewPassword`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -90,7 +90,7 @@ export const BackendProvider = ({ children }) => {
     return;
   };
 
-  const gettAllUser = async () => {
+  const getAllUsers = async () => {
     try {
       const response = await fetch(`${server}/players`, {
         headers: {
@@ -246,7 +246,7 @@ export const BackendProvider = ({ children }) => {
 
   const getMatchData = async (gameId) => {
     try {
-      const response = await fetch(`${server}/match/${gameId.id}`, {
+      const response = await fetch(`${server}/match/${gameId}`, {
         method: "GET",
       });
       const data = await response.json();
@@ -257,10 +257,10 @@ export const BackendProvider = ({ children }) => {
     }
   };
 
-  // All played matchs list
+  // All played matches list
   const getScoresData = async () => {
     try {
-      const response = await fetch(`${server}/matchs`, {
+      const response = await fetch(`${server}/matches`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -292,7 +292,7 @@ export const BackendProvider = ({ children }) => {
     }
   };
 
-  // Delete Played or Not Played Match
+  // Delete Match
   const removeMatch = async (matchId) => {
     try {
       const response = await fetch(`${server}/removeMatch/${matchId}`, {
@@ -315,7 +315,7 @@ export const BackendProvider = ({ children }) => {
         setEvent,
         signup,
         login,
-        gettAllUser,
+        getAllUsers,
         playerList,
         numberOfUsers,
         logOut,
@@ -330,7 +330,7 @@ export const BackendProvider = ({ children }) => {
         myData,
         updateMyData,
         forgotPassword,
-        newCreatedPassword,
+        createNewPassword,
         removeUser,
         startMatch,
         matchData,

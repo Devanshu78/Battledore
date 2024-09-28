@@ -5,7 +5,7 @@ import userRouter from "./Router/routes.js";
 import http from "http";
 import { Server } from "socket.io";
 
-// to save the data which come throug the socket
+// to save the data which come through the socket
 import { Match } from "./Models/matchs.model.js";
 
 const app = express();
@@ -36,14 +36,13 @@ const io = new Server(server, {
 // socket io
 
 io.on("connection", (socket) => {
-  console.log("a user connected" + socket.id);
   socket.on("update_score", async (data) => {
     const match = await Match.findOne({ _id: data.Id });
     if (match) {
-      console.log(data);
       match.scores.push({
-        firstTeamScore: data.teamonescore,
-        secondTeamScore: data.teamtwoscore,
+        firstTeamScore: data.firstTeamScore,
+        secondTeamScore: data.secondTeamScore,
+        numberOfShuttlecock: data.numberOfShuttlecock,
       });
       await match.save();
 
@@ -51,9 +50,7 @@ io.on("connection", (socket) => {
       socket.broadcast.emit("score_updated", data);
     }
   });
-  socket.on("disconnect", () => {
-    console.log("user disconnected" + socket.id);
-  });
+  socket.on("disconnect", () => {});
 });
 
 export const getIO = () => {

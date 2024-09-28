@@ -23,7 +23,7 @@ function App() {
         </div>
       ) : (
         <div className="text-center relative top-10 text-4xl text-white font-inter font-bold">
-          <h1>401 Unauthorised to Access</h1>
+          <h1>401 Unauthorized to Access</h1>
         </div>
       )}
     </>

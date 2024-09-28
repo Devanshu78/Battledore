@@ -13,7 +13,7 @@ import {
   Players,
   Events,
   Recent_Event,
-  Weekely_Event,
+  Weekly_Event,
   Upcoming_Event,
   LiveScore,
   PastMatch,
@@ -22,6 +22,7 @@ import {
   ForgotPassword,
   Game,
   ScorePage,
+  MatchDetails,
 } from "./pages/pages.js";
 import {
   createBrowserRouter,
@@ -41,9 +42,10 @@ const router = createBrowserRouter(
         <Route path="home" element={<Home />} />
         <Route path="players" element={<Players />} />
         <Route path="livescore" element={<LiveScore />} />
+        <Route path="matchdetails/:id" element={<MatchDetails />} />
         <Route path="events" element={<Events />}>
           <Route path="" element={<Recent_Event />} />
-          <Route path="weekely" element={<Weekely_Event />} />
+          <Route path="weekly" element={<Weekly_Event />} />
           <Route path="upcoming" element={<Upcoming_Event />} />
         </Route>
         <Route path="game/:eventId" element={<Game />} />
@@ -62,7 +64,7 @@ createRoot(document.getElementById("root")).render(
       <RouterProvider router={router} />
       <ToastContainer
         position="top-right"
-        autoClose={3000}
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -71,7 +73,6 @@ createRoot(document.getElementById("root")).render(
         draggable
         pauseOnHover
         theme="light"
-        // transition: Bounce,
       />
     </BackendProvider>
   </StrictMode>

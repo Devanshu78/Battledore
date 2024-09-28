@@ -1,28 +1,27 @@
 import { Match } from "../Models/matchs.model.js";
-import { getIO } from "../app.js";
 
 const addMatch = async (req, res) => {
   try {
     const {
       eventPlace,
-      numberofplayer,
+      numberOfPlayers,
       firstTeamName,
       secondTeamName,
-      playerone,
-      playertwo,
-      playerthree,
-      playerfour,
-      eventDetail,
+      playerOne,
+      playerTwo,
+      playerThree,
+      playerFour,
+      eventDetails,
     } = req.body;
     if (
       [
         eventPlace,
-        numberofplayer,
+        numberOfPlayers,
         firstTeamName,
         secondTeamName,
-        playerone,
-        playertwo,
-        eventDetail,
+        playerOne,
+        playerTwo,
+        eventDetails,
       ].some((field) => field?.trim() === "")
     ) {
       return res.status(400).json({ message: "All fields are required" });
@@ -30,21 +29,21 @@ const addMatch = async (req, res) => {
 
     const newMatch = new Match({
       eventPlace,
-      numberofplayer,
+      numberOfPlayers,
       firstTeamName,
       secondTeamName,
-      playerone,
-      playertwo,
-      playerthree,
-      playerfour,
-      eventDetail,
+      playerOne,
+      playerTwo,
+      playerThree,
+      playerFour,
+      eventDetails,
       referee: req?.user?.username || "YOYO",
     });
 
     await newMatch.save();
 
     const populatedMatch = await Match.findById(newMatch._id).populate(
-      "eventDetail"
+      "eventDetails"
     );
 
     res.status(201).json({
@@ -58,7 +57,7 @@ const addMatch = async (req, res) => {
         return res
           .status(400)
           .json({ message: "Select only silver, gold or premium" });
-      } else if (error.errors.numberofplayer) {
+      } else if (error.errors.numberOfPlayers) {
         return res
           .status(400)
           .json({ message: "Select only single or doubles" });
@@ -72,9 +71,9 @@ const addMatch = async (req, res) => {
   }
 };
 
-const getMatchs = async (req, res) => {
+const getMatches = async (req, res) => {
   try {
-    const matches = await Match.find().populate("eventDetail");
+    const matches = await Match.find().populate("eventDetails");
     res.status(200).json({ matches });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -83,7 +82,6 @@ const getMatchs = async (req, res) => {
 
 const updateMatch = async (req, res) => {
   try {
-    // const { winner, firstTeamScore, secondTeamScore } = req.body;
     const { winner } = req.body;
     const { matchId } = req.params;
 
@@ -91,8 +89,6 @@ const updateMatch = async (req, res) => {
       { _id: matchId },
       {
         winner,
-        // firstTeamScore,
-        // secondTeamScore,
         isPlayed: true,
       },
       {
@@ -112,8 +108,8 @@ const updateMatch = async (req, res) => {
 const deleteMatch = async (req, res) => {
   try {
     const { matchId } = req.params;
-    const existedMatch = await Match.findById({ _id: matchId });
-    if (!existedMatch) {
+    const existingMatch = await Match.findById({ _id: matchId });
+    if (!existingMatch) {
       return res.status(404).json({ message: "Match details not found" });
     }
 
@@ -121,7 +117,7 @@ const deleteMatch = async (req, res) => {
     if (!deletedMatch) {
       return res
         .status(500)
-        .json({ message: "Something went wrong while deleting the event" });
+        .json({ message: "Something went wrong while deleting the match" });
     }
 
     return res.status(200).json({
@@ -136,7 +132,7 @@ const onGoingMatch = async (req, res) => {
   try {
     const { gameId } = req.params;
     const onGoingMatch = await Match.findById({ _id: gameId }).populate(
-      "eventDetail"
+      "eventDetails"
     );
     if (!onGoingMatch) {
       return res.status(404).json({ message: "Match details not found" });
@@ -147,4 +143,4 @@ const onGoingMatch = async (req, res) => {
   }
 };
 
-export { addMatch, getMatchs, deleteMatch, updateMatch, onGoingMatch };
+export { addMatch, getMatches, deleteMatch, updateMatch, onGoingMatch };

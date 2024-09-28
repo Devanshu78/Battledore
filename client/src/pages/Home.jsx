@@ -11,13 +11,13 @@ const socket = io(`${import.meta.env.VITE_SERVER}`);
 function Home() {
   const { myData, getEvents, getScoresData } = useBackendService();
 
-  const [livescore, setLiveScore] = useState("");
-  const [events, setEvent] = useState([]);
+  const [liveScore, setLiveScore] = useState("");
+  const [events, setEvents] = useState([]);
   const [score, setScore] = useState([]);
 
   const getData = async () => {
     const eve = await getEvents();
-    setEvent(eve);
+    setEvents(eve);
     const res = await getScoresData();
     setScore(res);
   };
@@ -35,8 +35,13 @@ function Home() {
     );
   });
 
-  const secondLastScore = livescore.length - 2;
-  const lastThreeEvent = recentEvents.length - 3;
+  function toSentenceCase(str) {
+    if (!str) return str;
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+
+  const secondLastScore = liveScore.length - 2;
+  const lastThreeEvents = recentEvents.length - 3;
 
   useEffect(() => {
     getData();
@@ -52,15 +57,12 @@ function Home() {
     };
   }, []);
 
-  console.log(score);
-  console.log(livescore);
-
   return (
     <div>
       <h3 className="mt-10 text-xl sm:text-4xl text-white mb-3 flex gap-2 font-inter">
         Hello,
-        <span className="text-[#B1D848] uppercase font-bold">
-          {myData.username}
+        <span className="text-[#B1D848] font-bold">
+          {toSentenceCase(myData.username)}
         </span>
       </h3>
       <p className="border-b-2 w-1/2"></p>
@@ -72,7 +74,7 @@ function Home() {
               Events
             </h1>
             <div className="text-white px-1 sm:px-5 mt-2">
-              {recentEvents.slice(lastThreeEvent).map((event) => (
+              {recentEvents.slice(lastThreeEvents).map((event) => (
                 <div
                   key={event._id}
                   className=" text-[0.7rem] xs:text-sm sm:text-base lg:text-lg xl:text-xl"
@@ -115,42 +117,56 @@ function Home() {
                 >
                   <div>
                     <div className="flex gap-2">
-                      <h1 className="text-[#B1D848] font-bold">{`${liv.firstTeamName}`}</h1>
-                      <h1 className="text-[#B1D848] font-bold">{`${liv.secondTeamName}`}</h1>
+                      <h1 className="text-[#B1D848] font-bold">{`${toSentenceCase(
+                        liv.firstTeamName
+                      )}`}</h1>
+                      <h1 className="text-[#B1D848] font-bold">{`${toSentenceCase(
+                        liv.secondTeamName
+                      )}`}</h1>
                     </div>
-                    <div className="flex gap-2">
-                      <p>{`${liv.playerone}`}</p>
+                    <div className="flex gap-2 items-center">
                       <p>
-                        {liv.isPlayed || livescore == ""
-                          ? liv.scores.slice(-1)[0].firstTeamScore
-                          : livescore.teamonescore}
+                        <span>{`${toSentenceCase(liv.playerOne)}`}</span>
+                        <span>
+                          {liv.playerThree
+                            ? " & " + toSentenceCase(liv.playerThree)
+                            : null}
+                        </span>
+                      </p>
+                      <p>
+                        {liv.isPlayed || liveScore == ""
+                          ? liv.scores.length > 0
+                            ? liv.scores?.slice(-1)[0].firstTeamScore
+                            : null
+                          : liveScore.firstTeamScore}
                       </p>
                     </div>
-                    {liv.numberofplayer === "doubles" && (
-                      <div className="flex gap-2">
-                        <p>{`${liv.playerthree}`}</p>
-                        <p>
-                          {liv.isPlayed || livescore == ""
-                            ? liv.scores.slice(-1)[0].firstTeamScore
-                            : livescore.teamonescore}
-                        </p>
-                      </div>
-                    )}
-                    <div className="flex gap-2">
-                      <p>{`${liv.playertwo}`}</p>
+                    <div className="flex gap-2 items-center">
                       <p>
-                        {liv.isPlayed || livescore == ""
-                          ? liv.scores.slice(-1)[0].secondTeamScore
-                          : livescore.teamtwoscore}
+                        <span>{`${toSentenceCase(liv.playerTwo)}`}</span>
+                        <span>
+                          {liv.playerThree
+                            ? " & " + toSentenceCase(liv.playerFour)
+                            : null}
+                        </span>
+                      </p>
+                      <p>
+                        {liv.isPlayed || liveScore == ""
+                          ? liv.scores.length > 0
+                            ? liv.scores?.slice(-1)[0].secondTeamScore
+                            : null
+                          : liveScore.secondTeamScore}
                       </p>
                     </div>
                     {liv.numberofplayer === "doubles" && (
                       <div className="flex gap-2">
                         <p>{`${liv.playerfour}`}</p>
                         <p>
-                          {liv.isPlayed
-                            ? liv.scores.slice(-1)[0].secondTeamScore
-                            : livescore.teamtwoescore}
+                          {liv.isPlayed || liveScore == ""
+                            ? liv.scores.length > 0
+                              ? liv.scores?.slice(-1)[0].secondTeamScore
+                              : null
+                            : liveScore.secondLastScore}
                         </p>
                       </div>
                     )}
@@ -162,29 +178,29 @@ function Home() {
                       </p>
                     ) : (
                       <div>
-                        <div>
-                          {livescore.status === "notStart" ||
-                          livescore === "" ? (
-                            <p className="border border-red-500 px-5 py-1 text-center bg-red-500 rounded-xl">
-                              Not Started Yet
-                            </p>
-                          ) : null}
-                        </div>
-                        <div>
-                          {livescore.status === "start" &&
-                          liv.scores.length > 0 ? (
-                            <p className="border border-blue-500 px-5 py-1 text-center bg-blue-500 rounded-xl">
-                              Match is Live Now
-                            </p>
-                          ) : null}
-                        </div>
-                        <div>
-                          {livescore.status === "end" && (
-                            <p className="border border-green-500 px-5 py-1 text-center bg-green-500 rounded-xl">
-                              {livescore.won}
-                            </p>
-                          )}
-                        </div>
+                        {liv.scores.length > 0 ? (
+                          <div>
+                            <div>
+                              {liveScore.status === "start" ||
+                              liveScore === "" ? (
+                                <p className="border border-blue-500 px-5 py-1 text-center bg-blue-500 rounded-xl">
+                                  Match is Live Now
+                                </p>
+                              ) : null}
+                            </div>
+                            <div>
+                              {liveScore.status === "end" && (
+                                <p className="border border-green-500 px-5 py-1 text-center bg-green-500 rounded-xl">
+                                  {liveScore.won}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="border border-red-500 px-5 py-1 text-center bg-red-500 rounded-xl">
+                            Not Started Yet
+                          </p>
+                        )}
                       </div>
                     )}
                   </div>
@@ -194,7 +210,7 @@ function Home() {
           </div>
           <div className="h-auto w-full xl:w-[40%] xs:px-5 xs:py-3 xl:py-0 flex items-center">
             <NavLink
-              to="/livescore"
+              to="/liveScore"
               className={({ isActive }) =>
                 `${
                   isActive ? "opacity-70" : "opacity-100"

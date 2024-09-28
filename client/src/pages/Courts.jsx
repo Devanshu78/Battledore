@@ -22,7 +22,7 @@ function Courts() {
               <img
                 className="w-36 xs:w-48 md:w-full rounded-xl"
                 src={`../${court.name}.jpg`}
-                alt=""
+                alt={`${court.name} court`}
               />
               <div className="px-2 sm:px-6 py-1 sm:py-4 text-white">
                 <div className="font-bold text-xl mb-2">

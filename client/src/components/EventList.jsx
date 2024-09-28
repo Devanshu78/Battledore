@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 
 function EventList({ event }) {
-  const Naviagte = useNavigate();
+  const Navigate = useNavigate();
   const { removeEvent, numberOfEvents, updateEvent, myData } =
     useBackendService();
 
@@ -28,7 +28,7 @@ function EventList({ event }) {
   }
 
   function startGame() {
-    Naviagte(`/game/${event._id}`);
+    Navigate(`/game/${event._id}`);
   }
 
   return (
@@ -67,7 +67,7 @@ function EventList({ event }) {
               <input
                 type="text"
                 name="eventDesc"
-                className={` outline-none bg-transparent w-full h-auto break-keep whitespace-normal border border-gray-400 ${
+                className={`outline-none bg-transparent w-full lg:w-[150%] xl:w-[200%] h-auto break-keep whitespace-normal border border-gray-400 ${
                   isEditable
                     ? "border border-gray-300 rounded-lg px-2"
                     : "border-transparent"
@@ -81,18 +81,16 @@ function EventList({ event }) {
           {myData.isUmpire && (
             <div
               id="edit"
-              className="flex gap-8 cursor-pointer mt-2 justify-end"
+              className="flex gap-8 cursor-pointer mt-2 justify-end "
             >
               <div>
-                {today === event.eventStart ? (
+                {today === event.eventStart && (
                   <button
                     onClick={startGame}
                     className="border rounded-xl py-2 px-5 bg-green-500 hover:bg-green-600 text-white font-inter font-bold"
                   >
                     Start
                   </button>
-                ) : (
-                  <div></div>
                 )}
               </div>
               {myData.isOperator && (

@@ -8,6 +8,9 @@ const scoreSchema = new mongoose.Schema(
     secondTeamScore: {
       type: String,
     },
+    numberOfShuttlecock: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
@@ -17,53 +20,45 @@ const matSchema = new Schema(
     eventPlace: {
       type: String,
       required: true,
-      trime: true,
+      trim: true,
       enum: ["silver", "gold", "premium"],
     },
-    numberofplayer: {
+    numberOfPlayers: {
       type: String,
       required: true,
-      trime: true,
+      trim: true,
       enum: ["single", "doubles"],
     },
     firstTeamName: {
       type: String,
       required: true,
-      trime: true,
+      trim: true,
     },
     secondTeamName: {
       type: String,
       required: true,
-      trime: true,
+      trim: true,
     },
-    playerone: {
+    playerOne: {
       type: String,
       required: true,
-      trime: true,
+      trim: true,
     },
-    playertwo: {
+    playerTwo: {
       type: String,
       required: true,
-      trime: true,
+      trim: true,
     },
-    playerthree: {
+    playerThree: {
       type: String,
       default: "no player",
-      trime: true,
+      trim: true,
     },
-    playerfour: {
+    playerFour: {
       type: String,
       default: "no player",
-      trime: true,
+      trim: true,
     },
-    // firstTeamScore: {
-    //   type: String,
-    //   default: "0",
-    // },
-    // secondTeamScore: {
-    //   type: String,
-    //   default: "0",
-    // },
     scores: [scoreSchema],
     winner: {
       type: String,
@@ -77,9 +72,9 @@ const matSchema = new Schema(
     referee: {
       type: String,
       required: true,
-      trime: true,
+      trim: true,
     },
-    eventDetail: {
+    eventDetails: {
       type: Schema.Types.ObjectId,
       ref: "Event",
     },

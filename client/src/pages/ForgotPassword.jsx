@@ -4,7 +4,7 @@ import { useBackendService } from "../ContextAPI/connectToBackend";
 
 function ForgotPassword() {
   const Navigate = useNavigate();
-  const { forgotPassword, newCreatedPassword } = useBackendService();
+  const { forgotPassword, createNewPassword } = useBackendService();
   const [to, setTo] = useState("");
   const [otp, setOTP] = useState(null);
   const [code, setCode] = useState("");
@@ -23,7 +23,7 @@ function ForgotPassword() {
   };
 
   const handlePassword = async () => {
-    const res = await newCreatedPassword({ email: to, password: newPassword });
+    const res = await createNewPassword({ email: to, password: newPassword });
     if (res?.ok) {
       setNewPassword("");
       setPass(false);

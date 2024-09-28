@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
-import { Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import dayjs from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -11,11 +10,11 @@ function Events() {
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [numberofDays, setNumberofDays] = useState("");
-  const [isVisble, setIsVisble] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const { setEvent, myData } = useBackendService();
 
-  const [eventss, setEvents] = useState({
+  const [events, setEvents] = useState({
     eventTitle: "",
     eventStart: "",
     eventEnd: "",
@@ -28,7 +27,7 @@ function Events() {
   const handleDateChange = (newDate) => {
     setSelectedDate(newDate);
     setShowCalendar(!showCalendar);
-    setIsVisble(!isVisble);
+    setIsVisible(!isVisible);
   };
 
   const handleChange = (e) => {
@@ -52,13 +51,13 @@ function Events() {
     const daysToAdd = numberofDays;
     const formattedDate = addDaysToDate(currentDate, daysToAdd);
 
-    eventss.eventStart = selectedDate.format("DD-MM-YYYY");
-    eventss.eventEnd = formattedDate;
+    events.eventStart = selectedDate.format("DD-MM-YYYY");
+    events.eventEnd = formattedDate;
 
     // trying to send backend
-    setEvent(eventss);
+    setEvent(events);
 
-    setIsVisble(!isVisble);
+    setIsVisible(!isVisible);
     setEvents({
       eventTitle: "",
       eventStart: "",
@@ -74,7 +73,7 @@ function Events() {
           EVENTS
         </h1>
 
-        <button onClick={toggleCalendar}>
+        <button onClick={toggleCalendar} aria-label="Toggle Calendar">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="24px"
@@ -88,7 +87,7 @@ function Events() {
           </svg>
         </button>
       </div>
-      <div className="">
+      <div>
         {showCalendar && myData.isOperator && (
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateCalendar
@@ -97,10 +96,10 @@ function Events() {
               className="rounded-3xl bg-white absolute right-0 sm:right-0 z-50 px-4 sm:px-0"
               sx={{
                 width: {
-                  xs: "105%", // 100% width on extra-small screens
-                  sm: "300px", // 300px width on small screens
-                  md: "300px", // 400px width on medium screens
-                  lg: "300px", // 500px width on large screens
+                  xs: "105%",
+                  sm: "300px",
+                  md: "300px",
+                  lg: "300px",
                 },
                 height: {
                   xs: "300px",
@@ -125,7 +124,7 @@ function Events() {
           </LocalizationProvider>
         )}
       </div>
-      {selectedDate && isVisble && (
+      {selectedDate && isVisible && (
         <form
           id="eventbox"
           onSubmit={handleSubmit}
@@ -135,14 +134,14 @@ function Events() {
           <input
             type="text"
             name="eventTitle"
-            value={eventss.eventTitle}
+            value={events.eventTitle}
             onChange={handleChange}
             id=""
             placeholder="Name"
             className="outline-none border-b border-black px-2 sm:px-4 py-2 mr-2 sm:mr-4"
           />
           <div>
-            <label for="days">Duration : </label>
+            <label htmlFor="days">Duration : </label>
             <select
               name="numberofDays"
               value={numberofDays}
@@ -162,7 +161,7 @@ function Events() {
           <input
             type="text"
             name="eventDesc"
-            value={eventss.eventDesc}
+            value={events.eventDesc}
             onChange={handleChange}
             id=""
             placeholder="Additional info"
@@ -182,7 +181,7 @@ function Events() {
               width="24px"
               fill="#1"
               className="cursor-pointer"
-              onClick={() => setIsVisble(!isVisble)}
+              onClick={() => setIsVisible(!isVisible)}
             >
               <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" />
             </svg>
@@ -203,7 +202,7 @@ function Events() {
           </li>
           <li>
             <NavLink
-              to="weekely"
+              to="weekly"
               className={({ isActive }) =>
                 `${isActive ? "opacity-70" : "opacity-100"} cursor-pointer`
               }

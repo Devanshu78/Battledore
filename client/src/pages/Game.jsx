@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import { useBackendService } from "../ContextAPI/connectToBackend";
@@ -11,15 +11,15 @@ function Game() {
   const [gameState, setGameState] = useState({
     eventId,
     eventPlace: "",
-    numberofplayer: "",
+    numberOfPlayers: "",
     firstTeamName: "",
     secondTeamName: "",
-    playerone: "",
-    playertwo: "",
-    playerthree: "",
-    playerfour: "",
-    stricker: "",
-    reciver: "",
+    playerOne: "",
+    playerTwo: "",
+    playerThree: "",
+    playerFour: "",
+    server: "",
+    receiver: "",
   });
 
   const handleChange = (e) => {
@@ -31,14 +31,14 @@ function Game() {
   };
 
   const verifyFormData = () => {
-    if (gameState.stricker === gameState.reciver) {
-      toast.error("Stricker and reciver can't be same");
+    if (gameState.server === gameState.receiver) {
+      toast.error("server and receiver can't be same");
       return false;
     } else if (
-      gameState.playerone === gameState.playertwo &&
-      gameState.playerthree === gameState.playerfour &&
-      gameState.playerone === gameState.playerthree &&
-      gameState.playertwo === gameState.playerfour
+      gameState.playerOne === gameState.playerTwo &&
+      gameState.playerThree === gameState.playerFour &&
+      gameState.playerOne === gameState.playerThree &&
+      gameState.playerTwo === gameState.playerFour
     ) {
       toast.error("Player can't be same");
       return false;
@@ -46,16 +46,16 @@ function Game() {
       toast.error("Team Name can't be same");
       return false;
     } else if (
-      gameState.stricker != gameState.firstTeamName &&
-      gameState.stricker != gameState.secondTeamName
+      gameState.server != gameState.firstTeamName &&
+      gameState.server != gameState.secondTeamName
     ) {
-      toast.error("Stricker and Team Name must be same");
+      toast.error("server and Team Name must be same");
       return false;
     } else if (
-      gameState.reciver != gameState.firstTeamName &&
-      gameState.reciver != gameState.secondTeamName
+      gameState.receiver != gameState.firstTeamName &&
+      gameState.receiver != gameState.secondTeamName
     ) {
-      toast.error("Reciver and Team Name must be same");
+      toast.error("receiver and Team Name must be same");
       return false;
     }
     return true;
@@ -66,14 +66,14 @@ function Game() {
     if (valid) {
       const reqDetail = {
         eventPlace: gameState.eventPlace,
-        numberofplayer: gameState.numberofplayer,
-        firstTeamName: gameState.stricker,
-        secondTeamName: gameState.reciver,
-        playerone: gameState.playerone,
-        playertwo: gameState.playertwo,
-        playerthree: gameState.playerthree,
-        playerfour: gameState.playerfour,
-        eventDetail: gameState.eventId,
+        numberOfPlayers: gameState.numberOfPlayers,
+        firstTeamName: gameState.server,
+        secondTeamName: gameState.receiver,
+        playerOne: gameState.playerOne,
+        playerTwo: gameState.playerTwo,
+        playerThree: gameState.playerThree,
+        playerFour: gameState.playerFour,
+        eventDetails: gameState.eventId,
       };
       const res = await startMatch(reqDetail);
       const data = await res.json();
@@ -106,8 +106,8 @@ function Game() {
             <input
               type="text"
               placeholder="Single or Doubles"
-              name="numberofplayer"
-              value={gameState.numberofplayer}
+              name="numberOfPlayers"
+              value={gameState.numberOfPlayers}
               onChange={handleChange}
               className="px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-2 outline-none rounded-3xl w-full h-8 sm:h-10"
             />
@@ -125,17 +125,17 @@ function Game() {
                 <input
                   type="text"
                   placeholder="Player 1"
-                  name="playerone"
-                  value={gameState.playerone}
+                  name="playerOne"
+                  value={gameState.playerOne}
                   onChange={handleChange}
                   className="px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-2 outline-none rounded-3xl w-full h-8 sm:h-10"
                 />
-                {gameState.numberofplayer === "doubles" && (
+                {gameState.numberOfPlayers === "doubles" && (
                   <input
                     type="text"
                     placeholder="Player 2"
-                    name="playerthree"
-                    value={gameState.playerthree}
+                    name="playerThree"
+                    value={gameState.playerThree}
                     onChange={handleChange}
                     className="px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-2 outline-none rounded-3xl w-full h-8 sm:h-10"
                   />
@@ -153,17 +153,17 @@ function Game() {
                 <input
                   type="text"
                   placeholder="Player 1"
-                  name="playertwo"
-                  value={gameState.playertwo}
+                  name="playerTwo"
+                  value={gameState.playerTwo}
                   onChange={handleChange}
                   className="px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-2 outline-none rounded-3xl w-full h-8 sm:h-10"
                 />
-                {gameState.numberofplayer === "doubles" && (
+                {gameState.numberOfPlayers === "doubles" && (
                   <input
                     type="text"
                     placeholder="Player 2"
-                    name="playerfour"
-                    value={gameState.playerfour}
+                    name="playerFour"
+                    value={gameState.playerFour}
                     onChange={handleChange}
                     className="px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-2 outline-none rounded-3xl w-full h-8 sm:h-10"
                   />
@@ -173,26 +173,26 @@ function Game() {
 
             <div className="flex flex-col lg:flex-row items-start lg:items-center gap-2">
               <span className="font-base text-sm md:text-base lg:text-xl text-nowrap">
-                Stricker:
+                Server:
               </span>
               <input
                 type="text"
-                placeholder="Select Stricker Team"
-                name="stricker"
-                value={gameState.stricker}
+                placeholder="Select Servering Team"
+                name="server"
+                value={gameState.server}
                 onChange={handleChange}
                 className="outline-none px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-2 rounded-3xl w-full h-8 sm:h-10"
               />
             </div>
             <div className="flex flex-col lg:flex-row items-start lg:items-center gap-2">
               <span className="font-base text-sm md:text-base lg:text-xl text-nowrap">
-                Reciver:
+                receiver:
               </span>
               <input
                 type="text"
-                placeholder="Select Reciver Team"
-                name="reciver"
-                value={gameState.reciver}
+                placeholder="Select receiver Team"
+                name="receiver"
+                value={gameState.receiver}
                 onChange={handleChange}
                 className="outline-none px-3 py-2 md:px-4 md:py-2 lg:px-5 lg:py-2 rounded-3xl w-full h-8 sm:h-10"
               />

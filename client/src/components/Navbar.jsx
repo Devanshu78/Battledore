@@ -7,7 +7,7 @@ function Navbar() {
 
   const { logOut } = useBackendService();
 
-  const handlelogout = () => {
+  const handleLogout = () => {
     logOut();
     Navigate("/");
   };
@@ -168,7 +168,7 @@ function Navbar() {
               <span className="hidden md:block">Setting</span>
             </NavLink>
           </li>
-          <button onClick={handlelogout}>
+          <button onClick={handleLogout}>
             <span className="hidden md:block border transition duration-300 ease-out hover:ease-in hover:scale-y-110 text-center rounded-xl py-1 cursor-pointer">
               Logout
             </span>

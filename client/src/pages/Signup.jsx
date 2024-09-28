@@ -5,7 +5,7 @@ import { useBackendService } from "../ContextAPI/connectToBackend.jsx";
 function Signup() {
   const Navigate = useNavigate();
   const { signup } = useBackendService();
-  const [signupdata, setSignupdata] = useState({
+  const [signupData, setSignupData] = useState({
     jobrole: "",
     username: "",
     email: "",
@@ -17,13 +17,13 @@ function Signup() {
   const token = localStorage.getItem("token");
 
   const handleRole = (role) => {
-    signupdata.jobrole = `${role}`;
+    signupData.jobrole = `${role}`;
     setDropDown(false);
   };
 
   const handleSignup = (e) => {
-    setSignupdata({
-      ...signupdata,
+    setSignupData({
+      ...signupData,
       [e.target.name]: e.target.value,
     });
   };
@@ -33,8 +33,8 @@ function Signup() {
     if (token) {
       localStorage.removeItem("token");
     }
-    const response = await signup(signupdata);
-    setSignupdata({
+    const response = await signup(signupData);
+    setSignupData({
       jobrole: "",
       username: "",
       email: "",
@@ -80,7 +80,7 @@ function Signup() {
                 <input
                   type="text"
                   name="jobrole"
-                  value={signupdata.jobrole}
+                  value={signupData.jobrole}
                   onChange={handleSignup}
                   onClick={() => setDropDown(true)}
                   placeholder="Job Position"
@@ -122,7 +122,7 @@ function Signup() {
                 <input
                   type="text"
                   name="username"
-                  value={signupdata.username}
+                  value={signupData.username}
                   onChange={handleSignup}
                   placeholder="Username"
                   className="bg-transparent outline-none border-none px-6 w-3/4 placeholder:text-white"
@@ -141,7 +141,7 @@ function Signup() {
                 <input
                   type="text"
                   name="email"
-                  value={signupdata.email}
+                  value={signupData.email}
                   onChange={handleSignup}
                   placeholder="Email"
                   className="bg-transparent outline-none border-none px-6 w-3/4 placeholder:text-white"
@@ -161,7 +161,7 @@ function Signup() {
                   <input
                     type={showPassword ? "text" : "password"}
                     name="password"
-                    value={signupdata.password}
+                    value={signupData.password}
                     onChange={handleSignup}
                     placeholder="Password"
                     className="bg-transparent outline-none border-none px-6 placeholder:text-white w-full"

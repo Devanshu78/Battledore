@@ -6,7 +6,7 @@ import {
   allUsers,
   getUser,
   updateUserDetail,
-  newCreatedPassword,
+  createNewPassword,
   deleteUser,
 } from "../Controllers/user.controller.js";
 import {
@@ -19,7 +19,7 @@ import {
 import email from "../Controllers/mail.controller.js";
 import {
   addMatch,
-  getMatchs,
+  getMatches,
   deleteMatch,
   updateMatch,
   onGoingMatch,
@@ -31,7 +31,7 @@ const router = Router();
 router.route("/signup").post(registerUser);
 router.route("/login").post(loginUser);
 router.route("/forgotpassword").post(email);
-router.route("/newcreatedpassword").post(newCreatedPassword);
+router.route("/createNewPassword").post(createNewPassword);
 router.route("/users/delete/:userId").delete(authMiddleware, deleteUser);
 
 // event routes
@@ -46,7 +46,7 @@ router.route("/events/delete/:eventId").delete(authMiddleware, deleteEvent);
 // match routes
 router.route("/match/add").post(authMiddleware, addMatch);
 router.route("/match/:gameId").get(onGoingMatch);
-router.route("/matchs").get(authMiddleware, getMatchs);
+router.route("/matches").get(authMiddleware, getMatches);
 router.route("/removeMatch/:matchId").delete(authMiddleware, deleteMatch);
 router.route("/winner/:matchId").patch(authMiddleware, updateMatch);
 

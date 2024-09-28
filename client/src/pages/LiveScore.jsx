@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useBackendService } from "../ContextAPI/connectToBackend";
 import io from "socket.io-client";
 
 const socket = io(`${import.meta.env.VITE_SERVER}`);
 
-function LiveScore() {
+function liveScore() {
   const { getScoresData, myData, removeMatch, numberofMatches } =
     useBackendService();
 
-  const [livescore, setLivescore] = useState("");
+  const Navigate = useNavigate();
+
+  const [liveScore, setLiveScore] = useState("");
 
   const [list, setList] = useState([]);
 
@@ -23,7 +26,7 @@ function LiveScore() {
 
   useEffect(() => {
     socket.on("score_updated", (data) => {
-      setLivescore(data);
+      setLiveScore(data);
     });
 
     return () => {
@@ -41,77 +44,69 @@ function LiveScore() {
         {list?.map((event) => (
           <div key={event._id}>
             <div className="w-full rounded-3xl bg-[#7CB6CB] mt-5 p-3 font-inter flex flex-col sm:flex-row sm:justify-between sm:items-center">
-              <div className="flex flex-col lg:flex-row w-[90%] gap-2">
+              <div
+                className="flex flex-col lg:flex-row w-[90%] gap-2"
+                onClick={() => Navigate(`/matchdetails/${event._id}`)}
+              >
                 <img
                   className="rounded-3xl w-48"
                   src={`../${event.eventPlace}.jpg`}
                   alt=""
                 />
-                <div className="flex flex-col px-1 sm:px-4 gap-2 text-white text-sm sm:text-base md:text-xl text-nowrap">
-                  <h1 className="font-bold flex flex-col sm:flex-row sm:gap-2 sm:items-center">
-                    {event.eventDetail.eventTitle}{" "}
-                    <span className="text-sm font-normal">
-                      {event.eventDetail.eventDesc}
-                    </span>
-                  </h1>
-                  {/* <p className="font-bold">
-                    {event.playerone}{" "}
-                    <span className="text-sm font-normal">
-                      ({event.firstTeamName})
-                    </span>{" "}
-                    vs {event.playertwo}{" "}
-                    <span className="text-sm font-normal">
-                      ({event.secondTeamName})
-                    </span>
-                  </p> */}
-                  <p className="text-sm flex flex-col sm:flex-row sm:gap-2 sm:items-center">
-                    <span>{event.eventDetail.eventStart} </span>
-                    <span>{event.eventPlace.toUpperCase()} </span>
-                    <span>Umpire : {event.referee.toUpperCase()}</span>
-                  </p>
-                  <p>
-                    {event.isPlayed || livescore == ""
-                      ? event.scores.slice(-1)[0].firstTeamScore
-                      : livescore.teamonescore}{" "}
-                    <span className="text-sm font-normal">
-                      ({event.firstTeamName})
-                    </span>{" "}
-                    |{" "}
-                    {event.isPlayed || livescore == ""
-                      ? event.scores.slice(-1)[0].secondTeamScore
-                      : livescore.teamtwoscore}{" "}
-                    <span className="text-sm font-normal">
-                      ({event.secondTeamName})
-                    </span>
+                <div className="flex flex-col px-1 sm:px-4 gap-2 text-white text-nowrap">
+                  <h1>{`${event.eventDetails.eventTitle}`}</h1>
+                  <p className="text-[1.5rem] md:text-[2rem] xl:text-[2.5rem] flex gap-2">
+                    <div className="flex flex-col justify-center items-center">
+                      {event.isPlayed || liveScore == ""
+                        ? event.scores.length > 0
+                          ? event.scores.slice(-1)[0].firstTeamScore
+                          : null
+                        : liveScore.firstTeamScore}{" "}
+                      <span className="text-sm font-normal">
+                        ({event.firstTeamName})
+                      </span>
+                    </div>
+                    {" - "}
+                    <div className="flex flex-col justify-center items-center">
+                      {event.isPlayed || liveScore == ""
+                        ? event.scores.length > 0
+                          ? event.scores.slice(-1)[0].secondTeamScore
+                          : null
+                        : liveScore.secondTeamScore}{" "}
+                      <span className="text-sm font-normal">
+                        ({event.secondTeamName})
+                      </span>
+                    </div>
                   </p>
                   {event.isPlayed ? (
-                    <p className="border border-green-500 px-5 py-1 text-center bg-green-500 rounded-xl">
+                    <p className="border border-green-500 px-5 py-1 text-center text-xl md:text-3xl bg-green-500 rounded-xl">
                       {event.winner}
                     </p>
                   ) : (
                     <div>
-                      <div>
-                        {livescore.status === "notStart" || livescore === "" ? (
-                          <p className="border border-red-500 px-5 py-1 text-center bg-red-500 rounded-xl">
-                            Not Started Yet
-                          </p>
-                        ) : null}
-                      </div>
-                      <div>
-                        {livescore.status === "start" &&
-                        event.scores.length > 0 ? (
-                          <p className="border border-blue-500 px-5 py-1 text-center bg-blue-500 rounded-xl">
-                            Match is Live Now
-                          </p>
-                        ) : null}
-                      </div>
-                      <div>
-                        {livescore.status === "end" && (
-                          <p className="border border-green-500 px-5 py-1 text-center bg-green-500 rounded-xl">
-                            {livescore.won}
-                          </p>
-                        )}
-                      </div>
+                      {event.scores.length > 0 ? (
+                        <div>
+                          <div>
+                            {liveScore.status === "start" ||
+                            liveScore === "" ? (
+                              <p className="border border-blue-500 px-5 py-1 text-center bg-blue-500 rounded-xl">
+                                Match is Live Now
+                              </p>
+                            ) : null}
+                          </div>
+                          <div>
+                            {liveScore.status === "end" && (
+                              <p className="border border-green-500 px-5 py-1 text-center bg-green-500 rounded-xl">
+                                {liveScore.won}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="border border-red-500 px-5 py-1 text-center bg-red-500 rounded-xl">
+                          Not Started Yet
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>
@@ -146,4 +141,4 @@ function LiveScore() {
   );
 }
 
-export default LiveScore;
+export default liveScore;

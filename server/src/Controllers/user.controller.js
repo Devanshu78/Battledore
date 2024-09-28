@@ -45,7 +45,7 @@ const registerUser = async (req, res) => {
 
     return res
       .status(201)
-      .json({ data: createdUser, message: "User register successfully" });
+      .json({ data: createdUser, message: "User registered successfully" });
   } catch (error) {
     if (error.name === "ValidationError") {
       return res.status(400).json({
@@ -95,8 +95,8 @@ const allUsers = async (req, res) => {
 
 const getUser = async (req, res) => {
   try {
-    //middleare se data aa rha tha vhi send kr diya hai
-    res.send(req.user);
+    // Data is coming from middleware, sending it as is it.
+    res.json(req.user);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -105,8 +105,8 @@ const getUser = async (req, res) => {
 const updateUserDetail = async (req, res) => {
   try {
     const { _id } = req.user;
-    const existedEvent = await User.findById({ _id });
-    if (!existedEvent) {
+    const existingUser = await User.findById({ _id });
+    if (!existingUser) {
       return res.status(404).json({ message: "User not found" });
     }
     const { jobrole, username, email } = req.body;
@@ -125,14 +125,14 @@ const updateUserDetail = async (req, res) => {
 
     return res.status(200).json({
       data: updatedDetails,
-      message: "Your data is updated successfully",
+      message: "Your data has been updated successfully",
     });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
   }
 };
 
-const newCreatedPassword = async (req, res) => {
+const createNewPassword = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -155,7 +155,7 @@ const newCreatedPassword = async (req, res) => {
     }
 
     return res.status(200).json({
-      message: "Your data is updated successfully",
+      message: "Your data has been updated successfully",
     });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
@@ -174,7 +174,7 @@ const deleteUser = async (req, res) => {
     if (!deletedUser) {
       return res
         .status(500)
-        .json({ message: "Something went wrong while deleting the event" });
+        .json({ message: "Something went wrong while deleting the user" });
     }
 
     return res
@@ -191,6 +191,6 @@ export {
   allUsers,
   getUser,
   updateUserDetail,
-  newCreatedPassword,
+  createNewPassword,
   deleteUser,
 };

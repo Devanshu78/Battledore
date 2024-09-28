@@ -11,10 +11,8 @@ function PastMatch() {
   const oneMonthAgo = dayjs().subtract(1, "month").startOf("day");
 
   const pastEvents = eventList.filter((event) => {
-    const eventStartingDate = dayjs(event.eventStart, "DD-MM-YYYY").startOf(
-      "day"
-    );
-    return eventStartingDate.isBefore(oneMonthAgo);
+    const eventStartDate = dayjs(event.eventStart, "DD-MM-YYYY").startOf("day");
+    return eventStartDate.isBefore(oneMonthAgo);
   });
 
   useEffect(() => {
@@ -30,7 +28,7 @@ function PastMatch() {
       <div className="h-[80%] overflow-y-auto ">
         {pastEvents?.map((event) => (
           <div key={event._id}>
-            <EventList event={event} option={false} />
+            <EventList event={event} />
           </div>
         ))}
       </div>
