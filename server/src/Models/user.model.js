@@ -9,6 +9,7 @@ const userSchema = new Schema(
       required: true,
       lowercase: true,
       trim: true,
+      enum: ["match operator", "umpire", "match controller"],
     },
     username: {
       type: String,
@@ -27,6 +28,14 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: [true, "password is required"],
+    },
+    isUmpire: {
+      type: Boolean,
+      default: false,
+    },
+    isOperator: {
+      type: Boolean,
+      default: false,
     },
   },
   {
@@ -49,7 +58,7 @@ userSchema.methods.generateToken = function () {
   return jwt.sign(
     {
       _id: this.id.toString(),
-      emial: this.email,
+      email: this.email,
       username: this.username,
     },
     process.env.ACCESS_TOKEN_SECRET,

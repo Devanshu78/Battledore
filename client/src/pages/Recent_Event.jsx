@@ -5,7 +5,8 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
 function Recent_Event() {
-  const { getEvent, eventList, numberOfEvents } = useBackendService();
+  const { getEvents, eventList, numberOfEvents } = useBackendService();
+
   dayjs.extend(customParseFormat);
   const startDate = dayjs().subtract(30, "day");
   const endDate = dayjs().add(30, "day");
@@ -20,7 +21,7 @@ function Recent_Event() {
   });
 
   useEffect(() => {
-    getEvent();
+    getEvents();
   }, [numberOfEvents]);
 
   return (

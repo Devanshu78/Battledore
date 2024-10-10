@@ -5,7 +5,7 @@ import { useBackendService } from "../ContextAPI/connectToBackend.jsx";
 function Signup() {
   const Navigate = useNavigate();
   const { signup } = useBackendService();
-  const [signupdata, setSignupdata] = useState({
+  const [signupData, setSignupData] = useState({
     jobrole: "",
     username: "",
     email: "",
@@ -13,18 +13,28 @@ function Signup() {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [dropDown, setDropDown] = useState(false);
+  const token = localStorage.getItem("token");
+
+  const handleRole = (role) => {
+    signupData.jobrole = `${role}`;
+    setDropDown(false);
+  };
 
   const handleSignup = (e) => {
-    setSignupdata({
-      ...signupdata,
+    setSignupData({
+      ...signupData,
       [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await signup(signupdata);
-    setSignupdata({
+    if (token) {
+      localStorage.removeItem("token");
+    }
+    const response = await signup(signupData);
+    setSignupData({
       jobrole: "",
       username: "",
       email: "",
@@ -50,13 +60,13 @@ function Signup() {
           </button>
         </div>
         <div className="w-[90%] lg:w-[44rem] left-4 md:left-10 lg:left-24 relative top-[10rem] bg-[#5ea0b8] rounded-[50px] md:rounded-[80px] p-[2rem] md:p-[4rem] ">
-          <div className="flex flex-col justify-between gap-20 min-h-[300px]">
+          <div className="flex flex-col justify-between gap-10 md:gap-20 min-h-[300px]">
             <div>
               <h1 className="text-4xl text-white font-bold font-inter">
                 CREATE <span className="text-[#B1D848]">ACCOUNT </span>{" "}
               </h1>
             </div>
-            <div className="flex flex-col justify-between gap-7 font-inter">
+            <div className="flex flex-col justify-between gap-3 sm:gap-5 md:gap-7 font-inter relative">
               <div className="flex border-b-2 pb-1 text-white">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -70,12 +80,35 @@ function Signup() {
                 <input
                   type="text"
                   name="jobrole"
-                  value={signupdata.jobrole}
+                  value={signupData.jobrole}
                   onChange={handleSignup}
+                  onClick={() => setDropDown(true)}
                   placeholder="Job Position"
                   className="bg-transparent outline-none border-none px-6 w-3/4 placeholder:text-white"
                 />
               </div>
+              {dropDown && (
+                <div className="border bg-white w-[85%] absolute left-9 top-5 m-auto rounded-3xl px-5 py-3 text-xl font-inter cursor-pointer">
+                  <div
+                    className="border-b-2 opacity-80"
+                    onClick={() => handleRole("Match Controller")}
+                  >
+                    Match Controller
+                  </div>
+                  <div
+                    className="border-b-2 opacity-80"
+                    onClick={() => handleRole("Umpire")}
+                  >
+                    Umpire
+                  </div>
+                  <div
+                    className="opacity-80"
+                    onClick={() => handleRole("Match Operator")}
+                  >
+                    Match Operator
+                  </div>
+                </div>
+              )}
               <div className="flex border-b-2 pb-1 text-white">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -89,7 +122,7 @@ function Signup() {
                 <input
                   type="text"
                   name="username"
-                  value={signupdata.username}
+                  value={signupData.username}
                   onChange={handleSignup}
                   placeholder="Username"
                   className="bg-transparent outline-none border-none px-6 w-3/4 placeholder:text-white"
@@ -108,7 +141,7 @@ function Signup() {
                 <input
                   type="text"
                   name="email"
-                  value={signupdata.email}
+                  value={signupData.email}
                   onChange={handleSignup}
                   placeholder="Email"
                   className="bg-transparent outline-none border-none px-6 w-3/4 placeholder:text-white"
@@ -128,7 +161,7 @@ function Signup() {
                   <input
                     type={showPassword ? "text" : "password"}
                     name="password"
-                    value={signupdata.password}
+                    value={signupData.password}
                     onChange={handleSignup}
                     placeholder="Password"
                     className="bg-transparent outline-none border-none px-6 placeholder:text-white w-full"

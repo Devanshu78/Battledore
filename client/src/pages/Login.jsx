@@ -6,7 +6,7 @@ function Login() {
   const Navigate = useNavigate();
   const { login, token } = useBackendService();
 
-  const [logindata, setLogindata] = useState({
+  const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
@@ -14,15 +14,15 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = (e) => {
-    setLogindata({
-      ...logindata,
+    setLoginData({
+      ...loginData,
       [e.target.name]: e.target.value,
     });
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    login(logindata);
-    setLogindata({
+    login(loginData);
+    setLoginData({
       email: "",
       password: "",
     });
@@ -71,7 +71,7 @@ function Login() {
                 <input
                   type="text"
                   name="email"
-                  value={logindata.email}
+                  value={loginData.email}
                   onChange={handleLogin}
                   placeholder="Email"
                   className="bg-transparent outline-none border-none px-6 w-3/4 placeholder:text-white"
@@ -91,7 +91,7 @@ function Login() {
                   <input
                     type={showPassword ? "text" : "password"}
                     name="password"
-                    value={logindata.password}
+                    value={loginData.password}
                     onChange={handleLogin}
                     placeholder="Password"
                     className="bg-transparent outline-none border-none px-6 placeholder:text-white w-full"

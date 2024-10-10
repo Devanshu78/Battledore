@@ -2,10 +2,10 @@ import { Event } from "../Models/event.model.js";
 
 const getAllEvents = async (req, res) => {
   const events = await Event.find();
-  res.status(200).json({ events });
   if (!events) {
-    res.status(401).json({ message: "Events not found" });
+    res.status(404).json({ message: "Events not found" });
   }
+  res.status(200).json({ events });
 };
 
 const setEvent = async (req, res) => {
@@ -19,11 +19,11 @@ const setEvent = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const existedEvent = await Event.findOne({ eventStart });
-    if (existedEvent) {
+    const existingEvent = await Event.findOne({ eventStart });
+    if (existingEvent) {
       return res
         .status(409)
-        .json({ message: "Event already exists at same date" });
+        .json({ message: "Event already exists on the same date" });
     }
     const event = await Event.create({
       eventTitle,
@@ -50,8 +50,8 @@ const setEvent = async (req, res) => {
 
 const updateEvent = async (req, res) => {
   const { eventId } = req.params;
-  const existedEvent = await Event.findById({ _id: eventId });
-  if (!existedEvent) {
+  const existingEvent = await Event.findById({ _id: eventId });
+  if (!existingEvent) {
     return res.status(404).json({ message: "Event not found" });
   }
   const updatedEvent = await Event.findByIdAndUpdate(eventId, req.body, {
@@ -71,8 +71,8 @@ const updateEvent = async (req, res) => {
 
 const deleteEvent = async (req, res) => {
   const { eventId } = req.params;
-  const existedEvent = await Event.findById({ _id: eventId });
-  if (!existedEvent) {
+  const existingEvent = await Event.findById({ _id: eventId });
+  if (!existingEvent) {
     return res.status(404).json({ message: "Event not found" });
   }
 

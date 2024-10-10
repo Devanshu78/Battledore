@@ -6,15 +6,15 @@ export const BackendContext = createContext();
 export const BackendProvider = ({ children }) => {
   const server = String(import.meta.env.VITE_BATTLEDORE_SERVER_URL);
   const [token, setToken] = useState(localStorage.getItem("token") || "");
-  const [userName, setUserName] = useState(
-    localStorage.getItem("username") || ""
-  );
   const [eventList, setEventList] = useState([]);
   const [playerList, setPlayerList] = useState([]);
   const [myData, setMyData] = useState({});
   const [numberOfEvents, setNumberofEvents] = useState("");
   const [numberOfUsers, setNumberofUsers] = useState("");
+  const [numberofMatches, setNumberofMatches] = useState("");
+  const [matchData, setMatchData] = useState("");
 
+  // All user functions
   const signup = async (userData) => {
     try {
       const response = await fetch(`${server}/signup`, {
@@ -42,7 +42,6 @@ export const BackendProvider = ({ children }) => {
         body: JSON.stringify(user),
       });
       const data = await response.json();
-      setUserName(localStorage.setItem("username", data?.details?.username));
       setToken(data.token);
       localStorage.setItem("token", data.token);
       response.ok ? toast.success(data?.message) : toast.error(data?.message);
@@ -68,9 +67,9 @@ export const BackendProvider = ({ children }) => {
     }
   };
 
-  const newCreatedPassword = async (detail) => {
+  const createNewPassword = async (detail) => {
     try {
-      const response = await fetch(`${server}/newcreatedpassword`, {
+      const response = await fetch(`${server}/createNewPassword`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -85,7 +84,13 @@ export const BackendProvider = ({ children }) => {
     }
   };
 
-  const gettAllUser = async () => {
+  const logOut = () => {
+    setToken("");
+    localStorage.removeItem("token");
+    return;
+  };
+
+  const getAllUsers = async () => {
     try {
       const response = await fetch(`${server}/players`, {
         headers: {
@@ -95,6 +100,22 @@ export const BackendProvider = ({ children }) => {
       const data = await response.json();
       setPlayerList(data.users);
       setNumberofUsers(data.users.length);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const removeUser = async (userId) => {
+    try {
+      const response = await fetch(`${server}/users/delete/${userId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      setNumberofUsers(numberOfEvents - 1);
+      response.ok ? toast.success(data?.message) : toast.error(data?.message);
     } catch (error) {
       console.log(error.message);
     }
@@ -133,12 +154,7 @@ export const BackendProvider = ({ children }) => {
     }
   };
 
-  const logOut = () => {
-    setToken("");
-    localStorage.removeItem("username");
-    return localStorage.removeItem("token");
-  };
-
+  // events
   const setEvent = async (event) => {
     try {
       const response = await fetch(`${server}/events/post`, {
@@ -157,7 +173,7 @@ export const BackendProvider = ({ children }) => {
     }
   };
 
-  const getEvent = async () => {
+  const getEvents = async () => {
     try {
       const response = await fetch(`${server}/events`, {
         headers: {
@@ -167,6 +183,7 @@ export const BackendProvider = ({ children }) => {
       const data = await response.json();
       setEventList(data.events);
       setNumberofEvents(data.events.length);
+      return data.events;
     } catch (error) {
       console.log("Unable to fetch all events", error.message);
     }
@@ -210,20 +227,101 @@ export const BackendProvider = ({ children }) => {
     }
   };
 
+  // Schedule Match
+  const startMatch = async (reqDetail) => {
+    try {
+      const response = await fetch(`${server}/match/add`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reqDetail),
+      });
+      return response;
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const getMatchData = async (gameId) => {
+    try {
+      const response = await fetch(`${server}/match/${gameId}`, {
+        method: "GET",
+      });
+      const data = await response.json();
+      setMatchData(data.match);
+      return data;
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  // All played matches list
+  const getScoresData = async () => {
+    try {
+      const response = await fetch(`${server}/matches`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      setNumberofMatches(data.matches.length);
+      return data.matches;
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const updateScores = async (winner, gameId) => {
+    try {
+      const response = await fetch(`${server}/winner/${gameId}`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(winner),
+      });
+      const data = await response.json();
+      response.ok ? toast.success(data?.message) : toast.error(data?.message);
+      return response;
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  // Delete Match
+  const removeMatch = async (matchId) => {
+    try {
+      const response = await fetch(`${server}/removeMatch/${matchId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      setNumberofMatches(numberofMatches - 1);
+      response.ok ? toast.success(data?.message) : toast.error(data?.message);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <BackendContext.Provider
       value={{
         setEvent,
         signup,
         login,
-        gettAllUser,
+        getAllUsers,
         playerList,
         numberOfUsers,
         logOut,
         token,
-        userName,
         eventList,
-        getEvent,
+        getEvents,
         updateEvent,
         numberOfEvents,
         setNumberofEvents,
@@ -232,7 +330,15 @@ export const BackendProvider = ({ children }) => {
         myData,
         updateMyData,
         forgotPassword,
-        newCreatedPassword,
+        createNewPassword,
+        removeUser,
+        startMatch,
+        matchData,
+        numberofMatches,
+        getScoresData,
+        removeMatch,
+        getMatchData,
+        updateScores,
       }}
     >
       {children}
