@@ -104,7 +104,7 @@ function ScorePage() {
       <div className="h-screen w-[80%] m-auto font-inter">
         {/* Top Button Section */}
         <div className="sm:flex justify-center items-center">
-          <div className="text-3xl text-white font-bold rounded-3xl py-3 px-2 bg-[rgb(124,182,203)] m-4 flex justify-center items-center shadow-lg">
+          <div className="text-3xl text-white font-bold rounded-3xl py-3 px-2 bg-[rgb(124,182,203)] m-4 flex justify-center items-center gap-5 shadow-lg">
             <button
               onClick={() =>
                 setNumberOfShuttlecock((prev) =>

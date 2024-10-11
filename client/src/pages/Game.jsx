@@ -87,13 +87,15 @@ function Game() {
   return (
     <>
       <div>
-        <h3 className="mt-1 text-3xl md:text-4xl text-white mb-3 flex gap-2">
+        <h3 className="mt-1 text-3xl pt-5 md:pt-16  md:text-4xl text-white mb-3 flex gap-2">
           Game,
           <span className="text-[#B1D848] uppercase font-bold">ONN</span>
         </h3>
         <p className="border-b-2 w-1/2"></p>
-        <div className="w-[90%] lg:w-[95%] xl:w-[50%] bg-[#7CB6CB] min-w-[250px] min-h-[300px] rounded-[10px] md:rounded-[50px] lg:rounded-[96px] px-4 py-3 md:px-6 md:py-4 lg:px-8 lg:py-8 mt-3 lg:mt-10 ">
-          <h1 className="text-xl md:text-2xl lg:text-3xl text-white">Start</h1>
+        <div className="w-[90%] lg:w-[95%] xl:w-[50%] bg-[#7CB6CB] min-w-[250px] min-h-[300px] rounded-[10px] md:rounded-[50px] lg:rounded-[96px] px-4 pb-3 md:px-6 md:pb-4 lg:px-8 lg:pb-5 mt-3 lg:mt-10">
+          <h1 className="text-[2rem] lg:text-[3rem] py-1 font-semibold  text-white text-center">
+            Start
+          </h1>
           <div className="flex flex-col gap-3 md:gap-4 lg:gap-5 overflow-y-auto">
             <input
               type="text"
@@ -177,7 +179,7 @@ function Game() {
               </span>
               <input
                 type="text"
-                placeholder="Select Servering Team"
+                placeholder="Select Serving Team"
                 name="server"
                 value={gameState.server}
                 onChange={handleChange}
@@ -186,7 +188,7 @@ function Game() {
             </div>
             <div className="flex flex-col lg:flex-row items-start lg:items-center gap-2">
               <span className="font-base text-sm md:text-base lg:text-xl text-nowrap">
-                receiver:
+                Receiver:
               </span>
               <input
                 type="text"

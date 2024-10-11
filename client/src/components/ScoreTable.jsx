@@ -49,14 +49,14 @@ function ScoreTable() {
   const columns = [
     {
       field: "firstTeamName",
-      headerName: "First Team Name",
+      headerName: "First Team",
       flex: 1,
       disableColumnMenu: true,
       sortable: false,
     },
     {
       field: "secondTeamName",
-      headerName: "Second Team Name",
+      headerName: "Second Team",
       flex: 1,
       disableColumnMenu: true,
       sortable: false,

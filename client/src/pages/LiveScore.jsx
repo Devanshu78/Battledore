@@ -17,7 +17,7 @@ function liveScore() {
 
   const getData = async () => {
     const res = await getScoresData();
-    setList(res);
+    setList(res.reverse());
   };
 
   useEffect(() => {
@@ -45,7 +45,7 @@ function liveScore() {
           <div key={event._id}>
             <div className="w-full rounded-3xl bg-[#7CB6CB] mt-5 p-3 font-inter flex flex-col sm:flex-row sm:justify-between sm:items-center">
               <div
-                className="flex flex-col lg:flex-row w-[90%] gap-2"
+                className="flex flex-col lg:flex-row w-[90%] gap-2 cursor-pointer"
                 onClick={() => Navigate(`/matchdetails/${event._id}`)}
               >
                 <img

@@ -50,7 +50,7 @@ function EventList({ event }) {
               <input
                 type="text"
                 name="eventTitle"
-                className={`text-[#B1D848] bg-transparent font-bold outline-none w-full ${
+                className={`text-[#B1D848] bg-transparent font-bold outline-none w-full lg:w-[150%] xl:w-[200%] ${
                   isEditable
                     ? "border border-gray-300 rounded-lg px-2"
                     : "border-transparent"
