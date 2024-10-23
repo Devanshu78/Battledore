@@ -1,11 +1,17 @@
 import { Event } from "../Models/event.model.js";
+import { Match } from "../Models/matchs.model.js";
 
 const getAllEvents = async (req, res) => {
-  const events = await Event.find();
-  if (!events) {
-    res.status(404).json({ message: "Events not found" });
+  try {
+    const event = await Event.find().populate("matches");
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    return res.status(200).json({ events: event });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
   }
-  res.status(200).json({ events });
 };
 
 const setEvent = async (req, res) => {
@@ -19,12 +25,6 @@ const setEvent = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const existingEvent = await Event.findOne({ eventStart });
-    if (existingEvent) {
-      return res
-        .status(409)
-        .json({ message: "Event already exists on the same date" });
-    }
     const event = await Event.create({
       eventTitle,
       eventStart,
@@ -76,16 +76,11 @@ const deleteEvent = async (req, res) => {
     return res.status(404).json({ message: "Event not found" });
   }
 
-  const deletedEvent = await Event.findByIdAndDelete({ _id: eventId });
-  if (!deletedEvent) {
-    return res
-      .status(500)
-      .json({ message: "Something went wrong while deleting the event" });
-  }
+  await Match.deleteMany({ _id: { $in: existingEvent.matches } });
 
-  return res
-    .status(200)
-    .json({ data: deletedEvent, message: "Event is deleted successfully" });
+  await Event.deleteOne({ _id: eventId });
+
+  return res.status(200).json({ message: "Event is deleted successfully" });
 };
 
 export { getAllEvents, setEvent, updateEvent, deleteEvent };

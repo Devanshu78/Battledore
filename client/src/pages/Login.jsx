@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useBackendService } from "../ContextAPI/connectToBackend.jsx";
+import { useService } from "../ContextAPI/axios.jsx";
 
 function Login() {
   const Navigate = useNavigate();
-  const { login, token } = useBackendService();
+  const { login, token } = useService();
 
   const [loginData, setLoginData] = useState({
     email: "",
@@ -32,7 +32,7 @@ function Login() {
     if (token) {
       Navigate("/home");
     }
-  }, [token, Navigate]);
+  }, [token]);
 
   return (
     <>

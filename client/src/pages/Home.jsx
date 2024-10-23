@@ -1,15 +1,16 @@
-import { useBackendService } from "../ContextAPI/connectToBackend.jsx";
+import { useService } from "../ContextAPI/axios.jsx";
 import React from "react";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import io from "socket.io-client";
+import Watermark from "../components/Watermark.jsx";
 
 const socket = io(`${import.meta.env.VITE_SERVER}`);
 
 function Home() {
-  const { myData, getEvents, getScoresData } = useBackendService();
+  const { myData, getEvents, getScoresData } = useService();
 
   const [liveScore, setLiveScore] = useState("");
   const [events, setEvents] = useState([]);
@@ -25,7 +26,7 @@ function Home() {
   dayjs.extend(customParseFormat);
   const startDate = dayjs().subtract(30, "day");
   const endDate = dayjs().add(30, "day");
-  const recentEvents = events.filter((event) => {
+  const recentEvents = events?.filter((event) => {
     const eventStartDate = dayjs(event.eventStart, "DD-MM-YYYY");
     const eventEndDate = dayjs(event.eventEnd, "DD-MM-YYYY");
 
@@ -40,8 +41,8 @@ function Home() {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   }
 
-  const secondLastScore = liveScore.length - 2;
-  const lastThreeEvents = recentEvents.length - 3;
+  const secondLastScore = liveScore?.length - 2;
+  const lastThreeEvents = recentEvents?.length - 3;
 
   useEffect(() => {
     getData();
@@ -58,7 +59,7 @@ function Home() {
   }, []);
 
   return (
-    <div>
+    <div className="md:px-10 lg:px-0 h-full">
       <h3 className="mt-10 text-xl sm:text-4xl text-white mb-3 flex gap-2 font-inter">
         Hello,
         <span className="text-[#B1D848] font-bold">
@@ -66,36 +67,49 @@ function Home() {
         </span>
       </h3>
       <p className="border-b-2 w-1/2"></p>
-      <div className="flex flex-col gap-3  mt-5 md:mt-10">
+      <div className="flex flex-col gap-10 py-10">
         {/* Event Section */}
-        <div className=" border-4 border-[#7CB6CB] w-[98%] xs:w-[85%] sm:w-[80%] min-h-[200px] sm:min-h-[350px] rounded-[30px] md:rounded-[60px] lg:rounded-[75px] px-3 md:p-5 lg:p-10 py-2 flex justify-between flex-col xl:flex-row gap-1 xs:gap-0">
-          <div className="w-auto xl:w-[80%]">
-            <h1 className="text-xl xs:text-2xl md:text-3xl font-bold text-white text-wrap">
+        <div className=" border-4 border-[#7CB6CB] w-[98%] xs:w-[85%] sm:w-[80%] min-h-[200px] sm:min-h-[400px] rounded-[30px] md:rounded-[60px] lg:rounded-[75px]  flex justify-between flex-col xl:flex-row gap-1 xs:gap-0 ">
+          <div className="w-auto xl:w-[80%] p-2 md:p-4 lg:p-7 py-2">
+            <h1
+              className="text-xl xs:text-2xl md:text-3xl lg:text-[2rem] px-0 md:px-3 py-2
+             font-bold text-white"
+            >
               Events
             </h1>
-            <div className="text-white px-1 sm:px-5 mt-2">
-              {recentEvents.slice(lastThreeEvents).map((event) => (
+            <div className="text-white px-2 mt-5">
+              {recentEvents?.slice(lastThreeEvents)?.map((event) => (
                 <div
                   key={event._id}
-                  className=" text-[0.7rem] xs:text-sm sm:text-base lg:text-lg xl:text-xl"
+                  className="lg:flex md:gap-5 lg:gap-10 mt-3 items-center"
                 >
-                  <h1 className="text-[#B1D848] font-bold">{`${event.eventTitle}`}</h1>
-                  <div className="flex gap-2">
-                    <p>{`${event.eventStart}`}</p>
-                    <p>{`${event.eventEnd}`}</p>
+                  <div className="w-24 md:w-28">
+                    <img
+                      src="./badminton.jpg"
+                      alt="images"
+                      className="h-auto w-full rounded-xl"
+                    />
                   </div>
-                  <p>{`${event.eventDesc}`}</p>
+                  <div className="leading-4 md:leading-5 lg:leading-8">
+                    <h1 className="text-sm xs:text-lg md:text-xl text-[#B1D848] font-bold">{`${event.eventTitle}`}</h1>
+                    <p className="font-medium text-sm xs:text-base sm:text-lg">
+                      {`${event.eventStart}`}
+                      <span className="font-normal"> to </span>
+                      {`${event.eventEnd}`}
+                    </p>
+                    <p className="text-sm sm:text-base md:text-lg">{`${event.eventDesc}`}</p>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
-          <div className="h-auto w-full xl:w-[40%] xs:px-5 xs:py-3 xl:py-0 flex items-center rounded-3xl bg-[#7CB6CB]">
+          <div className="h-auto w-full xl:w-[40%] p-0 xl:py-0 flex items-center rounded-[4rem] bg-[#7CB6CB] shadow-2xl">
             <NavLink
               to="/events"
               className={({ isActive }) =>
                 `${
                   isActive ? "opacity-70" : "opacity-100"
-                } items-center cursor-pointer border py-3 w-full font-medium rounded-3xl text-base  md:text-xl scale-95 hover:scale-100 bg-white text-center`
+                } items-center cursor-pointer border py-3 w-full font-medium rounded-3xl text-base  md:text-xl scale-95 hover:scale-100 bg-white text-center shadow-2xl`
               }
             >
               See All
@@ -104,106 +118,30 @@ function Home() {
         </div>
 
         {/* Live Score Section */}
-        <div className="border-4 border-[#7CB6CB] w-[98%] xs:w-[85%] sm:w-[80%] min-h-[200px] sm:min-h-[350px] rounded-[30px] md:rounded-[60px] lg:rounded-[75px] px-3 py-2 md:p-5 lg:p-10 flex justify-between flex-col xl:flex-row gap-1 xs:gap-0">
-          <div className="w-auto xl:w-[80%] rounded-3xl xl:rounded-[50px] bg-[#7CB6CB] p-2">
-            <h1 className="text-xl xs:text-2xl md:text-3xl font-bold text-white px-4">
+        <div className="border-4 border-[#7CB6CB] w-[98%] xs:w-[85%] sm:w-[80%] min-h-[200px] sm:min-h-[350px] rounded-[30px] md:rounded-[60px] lg:rounded-[75px] flex justify-between flex-col xl:flex-row gap-1 xs:gap-0">
+          <div className="w-auto xl:w-[80%] rounded-3xl xl:rounded-[50px] bg-[#7CB6CB] overflow-hidden shadow-2xl min-h-[500px]">
+            <h1 className="text-xl xs:text-2xl md:text-3xl font-bold text-white px-5 sm:px-10 md:px-16 py-5">
               Live Score
             </h1>
-            <div className="text-white px-5 mt-2">
-              {score.slice(secondLastScore).map((liv) => (
-                <div
-                  key={liv._id}
-                  className="text-[0.7rem] xs:text-sm sm:text-lg lg:text-xl flex items-center gap-5 "
-                >
-                  <div>
-                    <div className="flex gap-2">
-                      <h1 className="text-[#B1D848] font-bold">{`${toSentenceCase(
-                        liv.firstTeamName
-                      )}`}</h1>
-                      <h1 className="text-[#B1D848] font-bold">{`${toSentenceCase(
-                        liv.secondTeamName
-                      )}`}</h1>
-                    </div>
-                    <div className="flex gap-2 items-center">
-                      <p>
-                        <span>{`${toSentenceCase(liv.playerOne)}`}</span>
-                        <span>
-                          {liv.playerThree
-                            ? " & " + toSentenceCase(liv.playerThree)
-                            : null}
-                        </span>
-                      </p>
-                      <p>
-                        {liv.isPlayed || liveScore == ""
-                          ? liv.scores.length > 0
-                            ? liv.scores?.slice(-1)[0].firstTeamScore
-                            : null
-                          : liveScore.firstTeamScore}
+            <div className="w-[104%] relative -left-2 h-64 bg-[url(.././badminton.jpg)] bg-center bg-cover bg-no-repeat"></div>
+            <div className="text-white p-2 md:p-8">
+              {score?.map((isLive) => (
+                <div key={isLive._id}>
+                  {isLive.isPlayed != true && isLive.scores.length > 0 ? (
+                    <div className="flex flex-col gap-0 md:gap-2 items-center">
+                      <h1 className="text-lg md:text-xl xl:text-2xl font-bold text-[#B1D848]">
+                        {isLive.eventDetails.eventTitle}
+                      </h1>
+                      <h3 className="text-lg md:text-xl font-semibold">
+                        {isLive.eventDetails.eventStart}
+                        <span className="font-medium"> to </span>
+                        {isLive.eventDetails.eventEnd}
+                      </h3>
+                      <p className="text-base md:text-lg">
+                        {isLive.eventDetails.eventDesc}
                       </p>
                     </div>
-                    <div className="flex gap-2 items-center">
-                      <p>
-                        <span>{`${toSentenceCase(liv.playerTwo)}`}</span>
-                        <span>
-                          {liv.playerThree
-                            ? " & " + toSentenceCase(liv.playerFour)
-                            : null}
-                        </span>
-                      </p>
-                      <p>
-                        {liv.isPlayed || liveScore == ""
-                          ? liv.scores.length > 0
-                            ? liv.scores?.slice(-1)[0].secondTeamScore
-                            : null
-                          : liveScore.secondTeamScore}
-                      </p>
-                    </div>
-                    {liv.numberofplayer === "doubles" && (
-                      <div className="flex gap-2">
-                        <p>{`${liv.playerfour}`}</p>
-                        <p>
-                          {liv.isPlayed || liveScore == ""
-                            ? liv.scores.length > 0
-                              ? liv.scores?.slice(-1)[0].secondTeamScore
-                              : null
-                            : liveScore.secondLastScore}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                  <div>
-                    {liv.isPlayed ? (
-                      <p className="border border-green-500 px-5 py-1 text-center bg-green-500 rounded-xl">
-                        {liv.winner}
-                      </p>
-                    ) : (
-                      <div>
-                        {liv.scores.length > 0 ? (
-                          <div>
-                            <div>
-                              {liveScore.status === "start" ||
-                              liveScore === "" ? (
-                                <p className="border border-blue-500 px-5 py-1 text-center bg-blue-500 rounded-xl">
-                                  Match is Live Now
-                                </p>
-                              ) : null}
-                            </div>
-                            <div>
-                              {liveScore.status === "end" && (
-                                <p className="border border-green-500 px-5 py-1 text-center bg-green-500 rounded-xl">
-                                  {liveScore.won}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        ) : (
-                          <p className="border border-red-500 px-5 py-1 text-center bg-red-500 rounded-xl">
-                            Not Started Yet
-                          </p>
-                        )}
-                      </div>
-                    )}
-                  </div>
+                  ) : null}
                 </div>
               ))}
             </div>
@@ -214,7 +152,7 @@ function Home() {
               className={({ isActive }) =>
                 `${
                   isActive ? "opacity-70" : "opacity-100"
-                } items-center cursor-pointer border py-3 w-full font-medium rounded-3xl text-base  md:text-xl scale-95 hover:scale-100 bg-white text-center`
+                } items-center cursor-pointer border py-3 w-full font-medium rounded-3xl text-base  md:text-xl scale-95 hover:scale-100 bg-white text-center shadow-2xl`
               }
             >
               See All

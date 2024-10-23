@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useBackendService } from "../ContextAPI/connectToBackend";
-import ScoreTable from "../components/ScoreTable.jsx";
+import { useService } from "../ContextAPI/axios";
+import ScoreSheet from "../components/ScoreSheet.jsx";
 import io from "socket.io-client";
+import Watermark from "../components/Watermark";
 
 const socket = io(`${import.meta.env.VITE_SERVER}`);
 
 function ScorePage() {
-  const { getMatchData, matchData, updateScores } = useBackendService();
+  const { getMatchData, matchData, updateScores } = useService();
   const gameId = useParams();
   const Navigate = useNavigate();
   useEffect(() => {
@@ -93,18 +94,18 @@ function ScorePage() {
     };
 
     const res = await updateScores(temp, gameId.id);
-    if (res.ok) {
-      Navigate("/livescore");
+    if (res.status >= 200 && res.status < 300) {
+      Navigate("/pastmatches");
       sendScore(teamOneScore, teamTwoScore, "end", winner);
     }
   };
 
   return (
     <>
-      <div className="h-screen w-[80%] m-auto font-inter">
+      <div className="w-[80%] m-auto font-inter">
         {/* Top Button Section */}
         <div className="sm:flex justify-center items-center">
-          <div className="text-3xl text-white font-bold rounded-3xl py-3 px-2 bg-[rgb(124,182,203)] m-4 flex justify-center items-center shadow-lg">
+          <div className="text-3xl text-white font-bold rounded-3xl py-3 px-5 bg-[rgb(124,182,203)] m-4 flex justify-center items-center shadow-lg gap-2 lg:gap-5">
             <button
               onClick={() =>
                 setNumberOfShuttlecock((prev) =>
@@ -117,32 +118,33 @@ function ScorePage() {
                 xmlns="http://www.w3.org/2000/svg"
                 height="40px"
                 viewBox="0 -960 960 960"
-                width="80px"
                 fill="#fff"
               >
                 <path d="M200-440v-80h560v80H200Z" />
               </svg>
             </button>
-            <h1 className="text-[3rem]">{numberOfShuttlecock}</h1>
-            <img className="w-12" src="./../shuttlecock.png" alt="" />
-            <button
-              onClick={() =>
-                setNumberOfShuttlecock((prev) =>
-                  Number(prev) < 10 ? Number(prev) + 1 : prev
-                )
-              }
-              disabled={!matchStarted}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="40px"
-                viewBox="0 -960 960 960"
-                width="80px"
-                fill="#fff"
+
+            <img src=".././mdi_badminton.png" alt="shuttle cock icon" />
+
+            <div>
+              <button
+                onClick={() =>
+                  setNumberOfShuttlecock((prev) =>
+                    Number(prev) < 10 ? Number(prev) + 1 : prev
+                  )
+                }
+                disabled={!matchStarted}
               >
-                <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
-              </svg>
-            </button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="40px"
+                  viewBox="0 -960 960 960"
+                  fill="#fff"
+                >
+                  <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
+                </svg>
+              </button>
+            </div>
           </div>
           <button
             className="text-3xl text-white font-bold rounded-3xl px-5 py-3 bg-[#7cb6cb] m-4 w-48 flex justify-center items-center shadow-lg"
@@ -184,74 +186,85 @@ function ScorePage() {
         </div>
 
         {/* Main Section */}
-        <div className="w-[85%] lg:w-[60%] m-auto h-auto bg-white pb-3 rounded-3xl">
+        <div className="w-[85%] lg:w-[60%] m-auto h-auto bg-white pb-4 rounded-t-3xl">
           {/* Score */}
-          <div className="px-10 text-[5rem] text-[#7cb6cb] flex justify-center gap-5 md:gap-10">
+          <div className="px-10 text-[4rem] lg:text-[5rem] text-[#7cb6cb] flex justify-center gap-5 md:gap-10">
             <span>{`${teamOneScore}`}</span>
             <span> - </span>
             <span>{`${teamTwoScore}`}</span>
           </div>
           {/* Court */}
-          <div className="h-[10rem] sm:h-[14rem] md:h-[20rem] lg:h-[23rem] xl:h-[25rem] 2xl:h-[30rem] bg-[url('./../badminton_court.jpg')] bg-cover bg-no-repeat bg-center flex shadow-lg">
-            <button
-              className="absolute top-[43%] md:top-[40%] xl:top-[60%] left-[1rem] xl:left-[10rem] p-6 xl:p-10 rounded-full text-xl md:text-[3rem] text-white bg-[#7cb6cb] shadow-lg"
-              onClick={() => handleButtonClick("teamOne")}
-              disabled={!matchStarted}
-            >
-              Score
-            </button>
-            <div className="w-full text-xl lg:text-xl xl:text-3xl text-white flex flex-col justify-evenly items-center">
-              <div className="text-center flex flex-col gap-0 xl:gap-4 max-w-48">
-                <h1 className="text-xl xl:text-3xl">
-                  {toSentenceCase(matchData?.playerOne)}
-                </h1>
-                <p className="text-xl md:text-3xl xl:text-[3rem]">
-                  ({toSentenceCase(matchData?.firstTeamName)})
-                </p>
-              </div>
-              {matchData?.playerThree && (
+          <div className="">
+            <div className="h-[10rem] sm:h-[14rem] md:h-[20rem] lg:h-[23rem] xl:h-[25rem] 2xl:h-[30rem] bg-[url('./../badminton_court.jpg')] bg-cover bg-no-repeat bg-center flex shadow-lg">
+              <button
+                className="absolute top-[50%] sm:top-[36%] md:top-[38%] xl:top-[50%] left-[1rem] xl:left-[10rem] p-6 xl:p-10 rounded-xl md:rounded-3xl text-xl md:text-[3rem] text-white bg-[#7cb6cb] shadow-lg"
+                onClick={() => handleButtonClick("teamOne")}
+                disabled={!matchStarted}
+              >
+                Score
+              </button>
+              <div className="w-full text-xl lg:text-xl xl:text-3xl text-white flex flex-col justify-evenly items-center">
                 <div className="text-center flex flex-col gap-0 xl:gap-4 max-w-48">
                   <h1 className="text-xl xl:text-3xl">
-                    {toSentenceCase(matchData?.playerThree)}
+                    {toSentenceCase(matchData?.playerOne)}
                   </h1>
                   <p className="text-xl md:text-3xl xl:text-[3rem]">
                     ({toSentenceCase(matchData?.firstTeamName)})
                   </p>
                 </div>
-              )}
-            </div>
-            <div className="w-full text-white flex flex-col justify-evenly items-center">
-              <div className="text-center flex flex-col gap-0 xl:gap-4 max-w-48">
-                <h1 className="text-xl xl:text-3xl">
-                  {toSentenceCase(matchData?.playerTwo)}
-                </h1>
-                <p className="text-xl md:text-3xl xl:text-[3rem]">
-                  ({toSentenceCase(matchData?.secondTeamName)})
-                </p>
+                {matchData?.playerThree && (
+                  <div className="text-center flex flex-col gap-0 xl:gap-4 max-w-48">
+                    <h1 className="text-xl xl:text-3xl">
+                      {toSentenceCase(matchData?.playerThree)}
+                    </h1>
+                    <p className="text-xl md:text-3xl xl:text-[3rem]">
+                      ({toSentenceCase(matchData?.firstTeamName)})
+                    </p>
+                  </div>
+                )}
               </div>
-              {matchData?.playerFour && (
+              <div className="w-full text-white flex flex-col justify-evenly items-center">
                 <div className="text-center flex flex-col gap-0 xl:gap-4 max-w-48">
                   <h1 className="text-xl xl:text-3xl">
-                    {toSentenceCase(matchData?.playerFour)}
+                    {toSentenceCase(matchData?.playerTwo)}
                   </h1>
                   <p className="text-xl md:text-3xl xl:text-[3rem]">
                     ({toSentenceCase(matchData?.secondTeamName)})
                   </p>
                 </div>
-              )}
+                {matchData?.playerFour && (
+                  <div className="text-center flex flex-col gap-0 xl:gap-4 max-w-48">
+                    <h1 className="text-xl xl:text-3xl">
+                      {toSentenceCase(matchData?.playerFour)}
+                    </h1>
+                    <p className="text-xl md:text-3xl xl:text-[3rem]">
+                      ({toSentenceCase(matchData?.secondTeamName)})
+                    </p>
+                  </div>
+                )}
+              </div>
+              <button
+                className="absolute top-[50%] sm:top-[36%] md:top-[38%] xl:top-[50%] right-[1rem] xl:right-[10rem] p-6 xl:p-10 rounded-xl md:rounded-3xl text-xl  md:text-[3rem] text-white bg-[#7cb6cb] shadow-lg"
+                onClick={() => handleButtonClick("teamTwo")}
+                disabled={!matchStarted}
+              >
+                Score
+              </button>
             </div>
-            <button
-              className="absolute top-[43%] md:top-[40%] xl:top-[60%] right-[1rem] xl:right-[10rem] p-6 xl:p-10 rounded-full text-xl  md:text-[3rem] text-white bg-[#7cb6cb] shadow-lg"
-              onClick={() => handleButtonClick("teamTwo")}
-              disabled={!matchStarted}
-            >
-              Score
-            </button>
           </div>
         </div>
-        <div className="bg-white w-full md:w-[80%] m-auto h-48">
-          <ScoreTable />
+        {/* score table */}
+        <div className="w-full md:w-[80%] m-auto">
+          <ScoreSheet />
         </div>
+        <footer className="text-center">
+          <div className="opacity-50 text-5xl md:text-7xl xl:text-9xl">
+            <Watermark />
+          </div>
+          <div className="text-white font-inter text-sm md:text-base lg:text-lg tracking-widest">
+            Maintained and developed by Eshway.
+          </div>
+        </footer>
       </div>
     </>
   );

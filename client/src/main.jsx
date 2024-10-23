@@ -2,7 +2,8 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
-import { BackendProvider } from "./ContextAPI/connectToBackend.jsx";
+// import { BackendProvider } from "./ContextAPI/connectToBackend.jsx";
+import { BackendProvider } from "./ContextAPI/axios.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -23,7 +24,9 @@ import {
   Game,
   ScorePage,
   MatchDetails,
+  Umpire,
 } from "./pages/pages.js";
+
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -48,11 +51,10 @@ const router = createBrowserRouter(
           <Route path="weekly" element={<Weekly_Event />} />
           <Route path="upcoming" element={<Upcoming_Event />} />
         </Route>
-        <Route path="game/:eventId" element={<Game />} />
         <Route path="pastmatches" element={<PastMatch />} />
-        <Route path="courts" element={<Courts />} />
         <Route path="user/setting" element={<Setting />} />
       </Route>
+      <Route path="umpire/:id" element={<Umpire />} />
       <Route path="scorepage/:id" element={<ScorePage />} />
     </>
   )

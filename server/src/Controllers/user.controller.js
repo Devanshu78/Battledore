@@ -96,9 +96,12 @@ const allUsers = async (req, res) => {
 const getUser = async (req, res) => {
   try {
     // Data is coming from middleware, sending it as is it.
-    res.json(req.user);
+    if (req.user) {
+      return res.json({ userData: req.user });
+    }
+    return res.json({ message: "User not found" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 

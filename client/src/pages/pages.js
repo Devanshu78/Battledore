@@ -15,6 +15,7 @@ import ForgotPassword from "./ForgotPassword";
 import Game from "./Game";
 import ScorePage from "./ScorePage";
 import MatchDetails from "./MatchDetails.jsx";
+import Umpire from "./Umpire.jsx";
 
 export {
   Home,
@@ -34,4 +35,5 @@ export {
   Game,
   ScorePage,
   MatchDetails,
+  Umpire,
 };
