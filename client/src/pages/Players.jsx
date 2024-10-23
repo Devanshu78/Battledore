@@ -1,16 +1,21 @@
 import React, { useEffect } from "react";
-import { useBackendService } from "../ContextAPI/connectToBackend.jsx";
+import { useService } from "../ContextAPI/axios";
 
 function Players() {
   const { playerList, getAllUsers, numberOfUsers, myData, removeUser } =
-    useBackendService();
+    useService();
 
   useEffect(() => {
     getAllUsers();
   }, [numberOfUsers]);
 
+  function toSentenceCase(str) {
+    if (!str) return str;
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+
   return (
-    <>
+    <div className="relative h-screen">
       <h1 className="text-3xl text-white font-bold mt-20 mb-5 font-inter">
         Players
       </h1>
@@ -19,7 +24,7 @@ function Players() {
         <p className="px-4 md:px-10 py-2 text-xl text-white font-medium font-inter">
           Total Players : {playerList.length}
         </p>
-        <div className="h-[490px] md:h-[45rem] overflow-y-auto">
+        <div className="h-full overflow-y-auto px-4 md:px-0">
           {playerList.map((player) => (
             <div
               key={player._id}
@@ -37,8 +42,8 @@ function Players() {
                 <div className="text-white w-full h-auto flex flex-col justify-center text-sm sm:text-base md:text-lg lg:text-xl">
                   <p className="font-light">
                     Name :{" "}
-                    <span className="text-[#B1D848] font-bold uppercase  lg:text-xl">
-                      {player.username}
+                    <span className="text-[#B1D848] font-bold lg:text-xl">
+                      {toSentenceCase(player.username)}
                     </span>
                   </p>
                   <p className="font-light text-nowrap">
@@ -46,7 +51,10 @@ function Players() {
                   </p>
                   {myData.isOperator && (
                     <p className="font-light">
-                      Role : <span className="font-bold">{player.jobrole}</span>
+                      Role :{" "}
+                      <span className="font-bold">
+                        {toSentenceCase(player.jobrole)}
+                      </span>
                     </p>
                   )}
                 </div>
@@ -75,7 +83,7 @@ function Players() {
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

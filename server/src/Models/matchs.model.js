@@ -19,47 +19,58 @@ const matSchema = new Schema(
   {
     eventPlace: {
       type: String,
-      required: true,
-      trim: true,
-      enum: ["silver", "gold", "premium"],
+      default: "",
     },
-    numberOfPlayers: {
+    typeOfMatch: {
       type: String,
+      enum: [
+        "Men's singles",
+        "Men's doubles",
+        "Women's singles",
+        "Women's doubles",
+      ],
       required: true,
       trim: true,
-      enum: ["single", "doubles"],
     },
     firstTeamName: {
       type: String,
       required: true,
-      trim: true,
     },
     secondTeamName: {
       type: String,
       required: true,
-      trim: true,
     },
     playerOne: {
       type: String,
-      required: true,
-      trim: true,
     },
     playerTwo: {
       type: String,
-      required: true,
-      trim: true,
     },
     playerThree: {
       type: String,
-      default: "no player",
-      trim: true,
+      default: "",
     },
     playerFour: {
       type: String,
-      default: "no player",
-      trim: true,
+      default: "",
+    },
+    matchDate: {
+      type: String,
+      required: true,
+    },
+    server: {
+      type: String,
+      default: "",
+    },
+    receiver: {
+      type: String,
+      default: "",
     },
     scores: [scoreSchema],
+    eventDetails: {
+      type: Schema.Types.ObjectId,
+      ref: "Event",
+    },
     winner: {
       type: String,
       default: "not played",
@@ -73,10 +84,6 @@ const matSchema = new Schema(
       type: String,
       required: true,
       trim: true,
-    },
-    eventDetails: {
-      type: Schema.Types.ObjectId,
-      ref: "Event",
     },
   },
   {

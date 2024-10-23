@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { useParams } from "react-router-dom";
-import { useBackendService } from "../ContextAPI/connectToBackend";
+import { useService } from "../ContextAPI/axios";
 import io from "socket.io-client";
 
 const socket = io(`${import.meta.env.VITE_SERVER}`);
 
 function ScoreTable() {
-  const { getMatchData, matchData } = useBackendService();
+  const { getMatchData, matchData } = useService();
   const gameId = useParams();
 
   const [tableData, setTableData] = useState([]);
@@ -53,6 +53,7 @@ function ScoreTable() {
       flex: 1,
       disableColumnMenu: true,
       sortable: false,
+      resizable: false,
     },
     {
       field: "secondTeamName",
@@ -60,6 +61,7 @@ function ScoreTable() {
       flex: 1,
       disableColumnMenu: true,
       sortable: false,
+      resizable: false,
     },
     {
       field: "firstTeamScore",
@@ -67,6 +69,7 @@ function ScoreTable() {
       flex: 1,
       disableColumnMenu: true,
       sortable: false,
+      resizable: false,
     },
     {
       field: "secondTeamScore",
@@ -74,6 +77,7 @@ function ScoreTable() {
       flex: 1,
       disableColumnMenu: true,
       sortable: false,
+      resizable: false,
     },
     {
       field: "numberOfShuttlecock",
@@ -81,50 +85,74 @@ function ScoreTable() {
       flex: 1,
       disableColumnMenu: true,
       sortable: false,
+      resizable: false,
     },
   ];
 
   return (
     <>
-      <DataGrid
-        rows={tableData}
-        getRowId={(row) => row._id}
-        columns={columns}
-        hideFooter
-        disableSelectionOnClick
-        sx={{
-          border: "none",
-          width: "100%",
-          // borderRadius: "20px",
-          "& .MuiDataGrid-cell": {
-            minHeight: 60,
-            textAlign: "center",
-            backgroundColor: "white",
-            fontSize: "clamp(12px,  2.5vw, 14px)",
-            lineHeight: "50px",
-          },
-          "& .MuiDataGrid-columnHeaders": {
-            fontSize: "12px",
-            backgroundColor: "#d0d0d0",
-            lineHeight: "100px",
-            whiteSpace: "normal",
-            wordWrap: "break-word",
-            height: "auto",
+      <div className="font-inter z-50">
+        <DataGrid
+          rows={tableData}
+          getRowId={(row) => row._id}
+          columns={columns}
+          hideFooter
+          disableSelectionOnClick
+          sx={{
+            border: "none",
             width: "100%",
-            "@media (min-width: 600px)": {
-              fontSize: "14px",
+            "& .MuiDataGrid-cell": {
+              minHeight: 60,
+              textAlign: "center",
+              backgroundColor: "white",
+              fontSize: "clamp(12px,  2.5vw, 18px)",
+              lineHeight: "50px",
+              borderWidth: "1px",
+              borderStyle: "solid",
+              borderColor: "#5ea0b8",
             },
-            "@media (min-width: 900px)": {
-              fontSize: "16px",
+            "& .MuiDataGrid-columnHeaders": {
+              backgroundColor: "#d0d0d0",
+              height: "auto",
+              width: "100%",
             },
-          },
-          "& .MuiDataGrid-columnHeaderTitle": {
-            whiteSpace: "normal",
-            wordWrap: "break-word",
-            lineHeight: "normal",
-          },
-        }}
-      />
+            "& .MuiDataGrid-columnHeaderTitle": {
+              whiteSpace: "normal",
+              fontSize: "20px",
+              fontWeight: "700",
+              textAlign: "center",
+              wordWrap: "break-word",
+              lineHeight: "normal",
+              fontFamily: "Inter",
+              "@media (max-width: 1024px)": {
+                fontSize: "16px",
+                fontWeight: "700",
+              },
+              "@media (max-width: 900px)": {
+                fontSize: "14px",
+                fontWeight: "700",
+              },
+              "@media (max-width: 600px)": {
+                fontSize: "12px",
+                fontWeight: "500",
+              },
+            },
+            "& .MuiDataGrid-columnHeaderTitleContainer": {
+              justifyContent: "center",
+            },
+            "&  .MuiDataGrid-container--top": {
+              borderWidth: "1px",
+              borderStyle: "solid",
+              borderColor: "#5ea0b8",
+            },
+            "& .MuiDataGrid-iconSeparator": {
+              color: "#5ea0b8",
+              height: "56px",
+              width: "56px",
+            },
+          }}
+        />
+      </div>
     </>
   );
 }

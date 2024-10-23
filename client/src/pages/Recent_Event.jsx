@@ -1,16 +1,17 @@
 import React, { useEffect } from "react";
 import EventList from "../components/EventList";
-import { useBackendService } from "../ContextAPI/connectToBackend.jsx";
+import { useService } from "../ContextAPI/axios";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
 function Recent_Event() {
-  const { getEvents, eventList, numberOfEvents } = useBackendService();
+  const { getEvents, eventList, numberOfEvents, numberofMatches } =
+    useService();
 
   dayjs.extend(customParseFormat);
   const startDate = dayjs().subtract(30, "day");
   const endDate = dayjs().add(30, "day");
-  const recentEvents = eventList.filter((event) => {
+  const recentEvents = eventList?.filter((event) => {
     const eventStartDate = dayjs(event.eventStart, "DD-MM-YYYY");
     const eventEndDate = dayjs(event.eventEnd, "DD-MM-YYYY");
 
@@ -22,7 +23,7 @@ function Recent_Event() {
 
   useEffect(() => {
     getEvents();
-  }, [numberOfEvents]);
+  }, [numberOfEvents, numberofMatches]);
 
   return (
     <>

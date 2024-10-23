@@ -1,22 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { useBackendService } from "../ContextAPI/connectToBackend.jsx";
-import dayjs from "dayjs";
-import { useNavigate } from "react-router-dom";
+import { useService } from "../ContextAPI/axios";
+import MatchList from "./MatchList.jsx";
+import MatchForm from "./MatchForm.jsx";
 
 function EventList({ event }) {
-  const Navigate = useNavigate();
-  const { removeEvent, numberOfEvents, updateEvent, myData } =
-    useBackendService();
-
-  const today = dayjs().format("DD-MM-YYYY");
+  const { removeEvent, numberOfEvents, updateEvent, myData } = useService();
 
   useEffect(() => {
     removeEvent;
   }, [numberOfEvents]);
 
   const [isEditable, setIsEditable] = useState(false);
+  const [showMatchList, setShowMatchList] = useState(false);
   const [updateName, setUpdateName] = useState(event.eventTitle);
   const [updateDesc, setUpdateDesc] = useState(event.eventDesc);
+  const [match, setMatch] = useState(false);
+  const [clickToDelete, setClickToDelete] = useState(false);
+
+  function scheduleMatch() {
+    setMatch(!match);
+  }
 
   function editEventDetail() {
     updateEvent(event._id, {
@@ -27,30 +30,26 @@ function EventList({ event }) {
     setIsEditable(!isEditable);
   }
 
-  function startGame() {
-    Navigate(`/game/${event._id}`);
-  }
-
   return (
     <>
       <div className="px-0 md:px-5">
-        <div className="mt-3 sm:mt-8 md:flex justify-between items-center gap-12">
+        <div className="mt-3 sm:mt-8 lg:flex justify-between items-center gap-5 lg:gap-12">
           <div
             id="about_event"
-            className="xs:flex lg:items-center gap-2 lg:gap-6 w-full h-auto"
+            className="sm:flex lg:items-center sm:gap-3 md:gap-6 w-full h-auto"
           >
-            <div>
+            <div className="w-36 h-auto">
               <img
-                className="w-24 lg:w-36 h-auto rounded-2xl"
+                className="w-full h-full rounded-2xl"
                 src="../badminton.jpg"
                 alt=""
               />
             </div>
-            <div className="text-white text-sm md:text-base lg:text-lg 2xl:text-xl">
+            <div className="text-white mt-3 sm:mt-0 w-full">
               <input
                 type="text"
                 name="eventTitle"
-                className={`text-[#B1D848] bg-transparent font-bold outline-none w-full lg:w-[150%] xl:w-[200%] ${
+                className={`text-[#B1D848] bg-transparent text-base xs:text-[1.25rem] md:text-xl lg:text-2xl font-bold outline-none w-full ${
                   isEditable
                     ? "border border-gray-300 rounded-lg px-2"
                     : "border-transparent"
@@ -61,13 +60,14 @@ function EventList({ event }) {
                 }}
                 readOnly={!isEditable}
               />
-              <div className="flex flex-col sm:flex-row sm:gap-2 sm:text-nowrap">
-                <span>{event.eventStart} </span> <span>{event.eventEnd}</span>
-              </div>
+              <p className="font-medium text-[0.975rem] md:text-lg">
+                {event.eventStart} <span className="font-normal">to</span>{" "}
+                {event.eventEnd}
+              </p>
               <input
                 type="text"
                 name="eventDesc"
-                className={`outline-none bg-transparent w-full lg:w-[150%] xl:w-[200%] h-auto break-keep whitespace-normal border border-gray-400 ${
+                className={`outline-none bg-transparent text-[0.8rem] md:text-base w-full h-auto break-keep whitespace-normal border border-gray-400 ${
                   isEditable
                     ? "border border-gray-300 rounded-lg px-2"
                     : "border-transparent"
@@ -78,26 +78,52 @@ function EventList({ event }) {
               />
             </div>
           </div>
-          {myData.isUmpire && (
+          <div
+            id="edit"
+            className="flex gap-4 cursor-pointer mt-2 justify-end items-center"
+          >
             <div
-              id="edit"
-              className="flex gap-8 cursor-pointer mt-2 justify-end "
+              className="border rounded-full"
+              onClick={() => setShowMatchList(!showMatchList)}
             >
-              <div>
-                {today === event.eventStart && (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="30px"
+                viewBox="0 -960 960 960"
+                width="30px"
+                fill="#fff"
+              >
+                <path d="M480-360 280-560h400L480-360Z" />
+              </svg>
+            </div>
+
+            {clickToDelete && (
+              <div className="absolute top-[30%] left-[10%] sm:left-[30%] lg:left-[40%] bg-white p-4 rounded-xl font-inter">
+                <h1 className="text-black text-xl text-center font-semibold">
+                  Are you sure?
+                </h1>
+                <div className="mt-2 space-x-4">
                   <button
-                    onClick={startGame}
-                    className="border rounded-xl py-2 px-5 bg-green-500 hover:bg-green-600 text-white font-inter font-bold"
+                    onClick={() => setClickToDelete(false)}
+                    className="border border-gray-800 px-4 py-2 text-black rounded-lg"
                   >
-                    Start
+                    Cancle
                   </button>
-                )}
+                  <button
+                    onClick={() => removeEvent(event._id)}
+                    className="text-white font-bold rounded-lg bg-red-500 border border-red-500 hover:bg-red-600 hover:border-red-600 px-4 py-2"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
+            )}
+            <div>
               {myData.isOperator && (
                 <div className="flex gap-4">
                   <button
                     onClick={() => {
-                      removeEvent(event._id);
+                      setClickToDelete(true);
                     }}
                   >
                     <svg
@@ -143,12 +169,45 @@ function EventList({ event }) {
                       </svg>
                     </button>
                   )}
+
+                  <button onClick={scheduleMatch}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="24px"
+                      viewBox="0 -960 960 960"
+                      width="24px"
+                      fill="#e8eaed"
+                    >
+                      <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
+                    </svg>
+                  </button>
                 </div>
+              )}
+            </div>
+          </div>
+        </div>
+        <div>
+          {showMatchList && (
+            <div>
+              {event?.matches?.length > 0 ? (
+                <div>
+                  {event?.matches?.map((match) => (
+                    <div key={match._id}>
+                      <MatchList match={match} eventId={event._id} />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-center text-white font-inter">
+                  No match is created
+                </p>
               )}
             </div>
           )}
         </div>
       </div>
+
+      <div>{match && <MatchForm event={event} />}</div>
     </>
   );
 }

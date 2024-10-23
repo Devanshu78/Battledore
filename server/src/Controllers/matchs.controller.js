@@ -1,86 +1,129 @@
 import { Match } from "../Models/matchs.model.js";
+import { Event } from "../Models/event.model.js";
 
-const addMatch = async (req, res) => {
+const startMatch = async (req, res) => {
   try {
-    const {
-      eventPlace,
-      numberOfPlayers,
-      firstTeamName,
-      secondTeamName,
-      playerOne,
-      playerTwo,
-      playerThree,
-      playerFour,
-      eventDetails,
-    } = req.body;
-    if (
-      [
-        eventPlace,
-        numberOfPlayers,
-        firstTeamName,
-        secondTeamName,
-        playerOne,
-        playerTwo,
-        eventDetails,
-      ].some((field) => field?.trim() === "")
-    ) {
+    const { matchId } = req.params;
+    const { eventPlace, server, receiver } = req.body;
+    if ([eventPlace, server, receiver].some((field) => field?.trim() === "")) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const newMatch = new Match({
-      eventPlace,
-      numberOfPlayers,
-      firstTeamName,
-      secondTeamName,
-      playerOne,
-      playerTwo,
-      playerThree,
-      playerFour,
-      eventDetails,
-      referee: req?.user?.username || "YOYO",
-    });
-
-    await newMatch.save();
-
-    const populatedMatch = await Match.findById(newMatch._id).populate(
-      "eventDetails"
-    );
-
-    res.status(201).json({
-      message: "Let's Play!!!",
-      gameId: populatedMatch._id,
-      match: populatedMatch,
-    });
-  } catch (error) {
-    if (error.name == `ValidationError`) {
-      if (error.errors.eventPlace) {
-        return res
-          .status(400)
-          .json({ message: "Select only silver, gold or premium" });
-      } else if (error.errors.numberOfPlayers) {
-        return res
-          .status(400)
-          .json({ message: "Select only single or doubles" });
-      }
+    const matchexists = await Match.findOne({ _id: matchId });
+    if (!matchexists) {
+      return res.status(409).json({ message: "Match not exists" });
     }
 
-    res.status(500).json({
+    const updatedMatch = await Match.findByIdAndUpdate(
+      { _id: matchId },
+      {
+        eventPlace,
+        server,
+        receiver,
+      },
+      {
+        new: true,
+      }
+    );
+
+    if (!updatedMatch) {
+      return res.status(404).json({ message: "Match details not found" });
+    }
+
+    return res.status(201).json({
+      message: "Let's Play!!!",
+    });
+  } catch (error) {
+    return res.status(500).json({
       message: "Server error",
       error: error.message,
     });
   }
 };
 
+const createMatch = async (req, res) => {
+  try {
+    const { eventId } = req.params;
+    const {
+      eventDetails,
+      typeOfMatch,
+      firstTeamName,
+      secondTeamName,
+      playerOne,
+      playerTwo,
+      playerThree,
+      playerFour,
+      matchDate,
+    } = req.body;
+    if (
+      [
+        eventDetails,
+        typeOfMatch,
+        firstTeamName,
+        secondTeamName,
+        playerOne,
+        playerTwo,
+        matchDate,
+      ].some((field) => field?.trim() === "")
+    ) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const newMatch = new Match({
+      eventDetails,
+      typeOfMatch,
+      firstTeamName,
+      secondTeamName,
+      playerOne,
+      playerTwo,
+      playerThree,
+      playerFour,
+      matchDate,
+      referee: req?.user?.username || "YOYO",
+    });
+
+    const createdMatch = await newMatch.save();
+    if (!createdMatch) {
+      return res.status(404).json({ message: "Match not created" });
+    }
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    event.matches.push(createdMatch._id);
+    await event.save();
+
+    return res
+      .status(201)
+      .json({ match: createdMatch, message: "Match created successfully" });
+  } catch (error) {
+    if (error.name == `ValidationError`) {
+      if (error.errors.typeOfMatch) {
+        return res.status(400).json({ message: "make some good choices" });
+      }
+    } else {
+      return res.status(500).json({ message: error.message });
+    }
+  }
+};
+
 const getMatches = async (req, res) => {
   try {
-    const matches = await Match.find().populate("eventDetails");
-    res.status(200).json({ matches });
+    const getAllMatches = await Match.find().populate({
+      path: "eventDetails",
+      select: "-matches",
+    });
+    if (getAllMatches?.length == 0) {
+      return res.status(200).json({ message: "No matches found" });
+    }
+    return res.status(200).json({ matches: getAllMatches });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-const updateMatch = async (req, res) => {
+const endMatch = async (req, res) => {
   try {
     const { winner } = req.body;
     const { matchId } = req.params;
@@ -107,7 +150,7 @@ const updateMatch = async (req, res) => {
 
 const deleteMatch = async (req, res) => {
   try {
-    const { matchId } = req.params;
+    const { matchId, eventId } = req.params;
     const existingMatch = await Match.findById({ _id: matchId });
     if (!existingMatch) {
       return res.status(404).json({ message: "Match details not found" });
@@ -120,6 +163,14 @@ const deleteMatch = async (req, res) => {
         .json({ message: "Something went wrong while deleting the match" });
     }
 
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    event.matches.pull(matchId);
+    await event.save();
+
     return res.status(200).json({
       message: "Match deleted successfully",
     });
@@ -131,16 +182,25 @@ const deleteMatch = async (req, res) => {
 const onGoingMatch = async (req, res) => {
   try {
     const { gameId } = req.params;
-    const onGoingMatch = await Match.findById({ _id: gameId }).populate(
-      "eventDetails"
-    );
+    const onGoingMatch = await Match.findById({ _id: gameId }).populate({
+      path: "eventDetails",
+      select: "-matches",
+    });
     if (!onGoingMatch) {
       return res.status(404).json({ message: "Match details not found" });
     }
+
     return res.status(200).json({ match: onGoingMatch });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-export { addMatch, getMatches, deleteMatch, updateMatch, onGoingMatch };
+export {
+  startMatch,
+  getMatches,
+  deleteMatch,
+  endMatch,
+  onGoingMatch,
+  createMatch,
+};

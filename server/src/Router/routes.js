@@ -18,11 +18,12 @@ import {
 
 import email from "../Controllers/mail.controller.js";
 import {
-  addMatch,
+  startMatch,
   getMatches,
   deleteMatch,
-  updateMatch,
+  endMatch,
   onGoingMatch,
+  createMatch,
 } from "../Controllers/matchs.controller.js";
 
 const router = Router();
@@ -33,21 +34,26 @@ router.route("/login").post(loginUser);
 router.route("/forgotpassword").post(email);
 router.route("/createNewPassword").post(createNewPassword);
 router.route("/users/delete/:userId").delete(authMiddleware, deleteUser);
-
-// event routes
-router.route("/players").get(authMiddleware, allUsers);
 router.route("/getmydata").get(authMiddleware, getUser);
 router.route("/updatemydata").put(authMiddleware, updateUserDetail);
+
+// get all registered users
+router.route("/players").get(authMiddleware, allUsers);
+
+// event routes
 router.route("/events").get(authMiddleware, getAllEvents);
 router.route("/events/post").post(authMiddleware, setEvent);
 router.route("/events/update/:eventId").put(authMiddleware, updateEvent);
 router.route("/events/delete/:eventId").delete(authMiddleware, deleteEvent);
 
 // match routes
-router.route("/match/add").post(authMiddleware, addMatch);
-router.route("/match/:gameId").get(onGoingMatch);
+router.route("/createMatch/:eventId").post(authMiddleware, createMatch);
+router.route("/match/:gameId").get(authMiddleware, onGoingMatch);
 router.route("/matches").get(authMiddleware, getMatches);
-router.route("/removeMatch/:matchId").delete(authMiddleware, deleteMatch);
-router.route("/winner/:matchId").patch(authMiddleware, updateMatch);
+router.route("/startmatch/:matchId").patch(authMiddleware, startMatch);
+router.route("/endmatch/:matchId").patch(authMiddleware, endMatch);
+router
+  .route("/removematch/:eventId/:matchId")
+  .delete(authMiddleware, deleteMatch);
 
 export default router;

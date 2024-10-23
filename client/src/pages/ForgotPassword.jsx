@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useBackendService } from "../ContextAPI/connectToBackend";
+import { useService } from "../ContextAPI/axios";
+import Footer from "../components/Footer";
 
 function ForgotPassword() {
   const Navigate = useNavigate();
-  const { forgotPassword, createNewPassword } = useBackendService();
+  const { forgotPassword, createNewPassword } = useService();
   const [to, setTo] = useState("");
   const [otp, setOTP] = useState(null);
   const [code, setCode] = useState("");
@@ -24,7 +25,7 @@ function ForgotPassword() {
 
   const handlePassword = async () => {
     const res = await createNewPassword({ email: to, password: newPassword });
-    if (res?.ok) {
+    if (res.status >= 200 && res.status < 300) {
       setNewPassword("");
       setPass(false);
       setOTP("");
@@ -178,6 +179,7 @@ function ForgotPassword() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

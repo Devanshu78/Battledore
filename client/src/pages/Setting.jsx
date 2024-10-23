@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useBackendService } from "../ContextAPI/connectToBackend.jsx";
+import { useService } from "../ContextAPI/axios";
 
 function Setting() {
-  const { myData, updateMyData } = useBackendService();
+  const { myData, updateMyData } = useService();
   const [isEditable, setIsEditable] = useState(false);
   const [updateName, setUpdateName] = useState("");
   const [updateEmail, setUpdateEmail] = useState("");
@@ -18,19 +18,25 @@ function Setting() {
     setIsEditable(!isEditable);
   }
 
+  function toSentenceCase(str) {
+    if (!str) return str;
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+
   useEffect(() => {
     if (myData) {
-      setUpdateName(myData.username || "");
+      setUpdateName(toSentenceCase(myData.username) || "");
       setUpdateEmail(myData.email || "");
-      setUpdateRole(myData.jobrole || "");
+      setUpdateRole(toSentenceCase(myData.jobrole) || "");
     }
   }, [myData]);
 
   return (
     <>
-      <div className="w-[88%]">
-        <h1 className="text-3xl text-white font-bold mt-20 mb-5 font-inter">
-          Setting
+      <div className="w-[88%] h-[78vh]">
+        {/* h-[87vh] border */}
+        <h1 className="text-3xl md:text-4xl text-white font-bold mt-20 mb-5 font-inter">
+          Settings
         </h1>
         <hr />
         <div>
@@ -51,7 +57,7 @@ function Setting() {
                       value={updateName}
                       onChange={(e) => setUpdateName(e.target.value)}
                       readOnly={!isEditable}
-                      className={`font-bold uppercase text-[#B1D848] bg-transparent outline-none ${
+                      className={`font-bold text-[#B1D848] bg-transparent outline-none ${
                         isEditable
                           ? "border border-gray-300 rounded-lg px-2 w-44 sm:w-auto"
                           : "border-transparent"
