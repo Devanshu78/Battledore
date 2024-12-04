@@ -21,7 +21,6 @@ import {
   Courts,
   Setting,
   ForgotPassword,
-  Game,
   ScorePage,
   MatchDetails,
   Umpire,

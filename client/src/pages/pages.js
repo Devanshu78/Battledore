@@ -12,10 +12,10 @@ import PastMatch from "./PastMatch";
 import Courts from "./Courts";
 import Setting from "./Setting";
 import ForgotPassword from "./ForgotPassword";
-import Game from "./Game";
 import ScorePage from "./ScorePage";
 import MatchDetails from "./MatchDetails.jsx";
 import Umpire from "./Umpire.jsx";
+import UmpireSection from "./UmpireSection";
 
 export {
   Home,
@@ -32,8 +32,8 @@ export {
   Courts,
   Setting,
   ForgotPassword,
-  Game,
   ScorePage,
   MatchDetails,
   Umpire,
+  UmpireSection,
 };

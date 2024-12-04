@@ -46,20 +46,13 @@ function Umpire() {
   };
 
   const verifyFormData = () => {
-    if (gameState.server === gameState.receiver) {
-      toast.error("server & receiver can't be same");
-      return false;
-    } else if (
-      gameState.server != match.firstTeamName &&
-      gameState.server != match.secondTeamName
+    if (
+      (gameState.server != match.firstTeamName &&
+        gameState.server != match.secondTeamName) ||
+      (gameState.receiver != match.firstTeamName &&
+        gameState.receiver != match.secondTeamName)
     ) {
-      toast.error("server & Team must be same");
-      return false;
-    } else if (
-      gameState.receiver != match.firstTeamName &&
-      gameState.receiver != match.secondTeamName
-    ) {
-      toast.error("receiver & Team must be same");
+      toast.error("Team must be same");
       return false;
     }
     return true;
@@ -77,7 +70,8 @@ function Umpire() {
       res.data.message
         ? toast.success(res.data.message)
         : toast.error(res.data.message);
-      if (200 <= res.status && res.status < 300) {
+
+      if (res.status === 201) {
         setGameState({
           eventPlace: "",
           server: "",
@@ -166,7 +160,7 @@ function Umpire() {
                     onClick={() =>
                       setTeamOptionForReceiver(!teamOptionForReceiver)
                     }
-                    placeholder="Receiver Team"
+                    placeholder="Select team on your right"
                     className="bg-transparent outline-none border-none px-2 md:px-6 w-3/4 placeholder:text-white text-medium md:text-lg lg:text-xl"
                   />
                   {teamOptionForReceiver && (

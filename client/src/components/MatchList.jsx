@@ -15,6 +15,11 @@ function MatchList({ match, eventId }) {
     Navigate(`/umpire/${match._id}`, { state: { match } });
   }
 
+  function toSentenceCase(str) {
+    if (!str) return str;
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+
   return (
     <>
       <div className="rounded-2xl px-3 py-1 md:p-4 my-4 text-base md:text-lg bg-[#7cb6cb] text-white font-inter font-medium flex justify-between items-center">
@@ -22,6 +27,7 @@ function MatchList({ match, eventId }) {
           <h1>{match?.typeOfMatch}</h1>
           <p>{`${match?.firstTeamName} vs ${match?.secondTeamName}`}</p>
           <p>{match?.matchDate}</p>
+          <p>{toSentenceCase(match?.referee)}</p>
         </div>
         <div className="flex gap-4">
           <div>
@@ -58,7 +64,7 @@ function MatchList({ match, eventId }) {
                   onClick={() => setClickToDelete(false)}
                   className="border border-gray-800 px-4 py-2 text-black rounded-lg"
                 >
-                  Cancle
+                  Cancel
                 </button>
                 <button
                   onClick={() => removeMatch(eventId, match._id)}

@@ -67,7 +67,7 @@ function Events() {
     setNumberofDays("");
   };
   return (
-    <div className="w-[95%] sm:w-[100%] relative h-screen pr-4">
+    <div className="w-[95%] sm:w-[100%] relative min-h-[90vh] pr-4">
       <div className="mt-16 flex justify-between items-center min-w-[210px]">
         <h1 className="text-xl sm:text-3xl text-white font-bold font-mono">
           EVENTS
@@ -89,7 +89,7 @@ function Events() {
           </button>
           {myData.isOperator && (
             <h1 className="text-white font-inter text-sm sm:text-base md:text-lg lg:text-xl">
-              Create match
+              Create event
             </h1>
           )}
         </div>

@@ -1,4 +1,5 @@
 import { User } from "../Models/user.model.js";
+import { Match } from "../Models/matchs.model.js";
 
 const registerUser = async (req, res) => {
   try {
@@ -95,9 +96,11 @@ const allUsers = async (req, res) => {
 
 const getUser = async (req, res) => {
   try {
-    // Data is coming from middleware, sending it as is it.
-    if (req.user) {
-      return res.json({ userData: req.user });
+    const user = await User.findOne({
+      username: req?.user?.username,
+    })?.populate("matches");
+    if (user) {
+      return res.json({ userData: user });
     }
     return res.json({ message: "User not found" });
   } catch (error) {

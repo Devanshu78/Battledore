@@ -41,7 +41,6 @@ function Home() {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   }
 
-  const secondLastScore = liveScore?.length - 2;
   const lastThreeEvents = recentEvents?.length - 3;
 
   useEffect(() => {
@@ -59,7 +58,7 @@ function Home() {
   }, []);
 
   return (
-    <div className="md:px-10 lg:px-0 h-full">
+    <div className="md:px-10 lg:px-0 min-h-[95vh]">
       <h3 className="mt-10 text-xl sm:text-4xl text-white mb-3 flex gap-2 font-inter">
         Hello,
         <span className="text-[#B1D848] font-bold">

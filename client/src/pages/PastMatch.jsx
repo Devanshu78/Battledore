@@ -35,37 +35,37 @@ function PastMatch() {
                   <div className="mx-2 mt-1 sm:mx-0 sm:mt-0 w-24 sm:w-36 flex justify-center items-center">
                     <img
                       className="rounded-lg w-full h-full"
-                      src={`../silver.jpg`}
+                      src={`../badminton_court.jpg`}
                       alt=""
                     />
                   </div>
                   <div className="flex flex-col px-1 sm:px-4 gap-2 text-white text-wrap">
                     <h1 className="text-lg md:text-xl lg:text-2xl font-bold">
-                      {event.eventDetails.eventTitle}
+                      {event?.eventDetails?.eventTitle}
                     </h1>
                     <div className="flex justify-evenly items-center gap-4">
                       <div className="text-[1.5rem] md:text-[2rem] xl:text-[2.5rem] flex gap-2">
                         <div className="flex flex-col justify-center items-center">
                           {event.isPlayed
-                            ? event.scores.slice(-1)[0].firstTeamScore
+                            ? event?.scores.slice(-1)[0]?.firstTeamScore
                             : null}
                           <span className="text-sm font-normal">
-                            ({event.firstTeamName})
+                            ({event?.firstTeamName})
                           </span>
                         </div>
                         {" - "}
                         <div className="flex flex-col justify-center items-center">
                           {event.isPlayed
-                            ? event.scores.slice(-1)[0].secondTeamScore
+                            ? event?.scores.slice(-1)[0]?.secondTeamScore
                             : null}
                           <span className="text-sm font-normal">
-                            ({event.secondTeamName})
+                            ({event?.secondTeamName})
                           </span>
                         </div>
                       </div>
 
                       <p className="border border-green-500 px-2 sm:px-4 py-1 text-center text-normal md:text-xl bg-green-500 rounded-lg sm:rounded-xl w-auto sm:w-[48] text-wrap">
-                        {event.winner}
+                        {event?.winner}
                       </p>
                     </div>
                   </div>
