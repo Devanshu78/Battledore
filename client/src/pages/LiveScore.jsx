@@ -48,8 +48,8 @@ function liveScore() {
                   onClick={() => Navigate(`/matchdetails/${event._id}`)}
                 >
                   <img
-                    className="rounded-3xl w-48"
-                    src={`../silver.jpg`}
+                    className="rounded-xl w-36"
+                    src={`../badminton_court.jpg`}
                     alt=""
                   />
                   <div className="flex flex-col px-1 sm:px-4 gap-2 text-white text-nowrap">
@@ -147,8 +147,8 @@ function liveScore() {
                   onClick={() => Navigate(`/matchdetails/${event._id}`)}
                 >
                   <img
-                    className="rounded-3xl w-48"
-                    src={`../silver.jpg`}
+                    className="rounded-xl w-36"
+                    src={`../badminton_court.jpg`}
                     alt=""
                   />
                   <div className="flex flex-col px-1 sm:px-4 gap-0 text-white text-nowrap">

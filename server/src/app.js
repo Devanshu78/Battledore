@@ -38,7 +38,7 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   socket.on("update_score", async (data) => {
     const match = await Match.findOne({ _id: data.Id });
-    if (match) {
+    if (match && data.status == "start") {
       match.scores.push({
         firstTeamScore: data.firstTeamScore,
         secondTeamScore: data.secondTeamScore,

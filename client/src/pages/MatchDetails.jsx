@@ -36,7 +36,7 @@ function MatchDeatils() {
 
   return (
     <>
-      <div className="min-h-screen w-[90%] 2xl:w-full pt-10 font-inter">
+      <div className="min-h-[90vh] w-[90%] 2xl:w-full pt-10 font-inter">
         <h1 className="text-2xl md:text-4xl lg:text-5xl text-white font-medium px-4 md:px-10">
           Live Score
         </h1>
@@ -161,13 +161,12 @@ function MatchDeatils() {
                   </p>
                 </div>
               </div>
-              {/* score table */}
-              <div className="w-full xl:w-[90%] xl:mx-auto h-80 rounded-xl">
-                <VerticalScoreSheet />
-              </div>
-              {/* <div className="w-full md:w-[80%] m-auto border">
-                <ScoreSheet />
-              </div> */}
+
+              {matchData.isPlayed || matchData?.scores?.length > 0 ? (
+                <div className="w-[90%] 2xl:w-fit 2xl:m-auto pb-10">
+                  <ScoreSheet />
+                </div>
+              ) : null}
             </div>
           ) : null}
         </div>

@@ -8,6 +8,7 @@ function MatchForm({ event }) {
 
   const [matchTypeOption, setMatchTypeOption] = useState(false);
   const [matchBox, setMatchBox] = useState(true);
+  const [playerState, setPlayerState] = useState(false);
 
   const [matchDetail, setMatchDetail] = useState({
     eventDetails: event?._id,
@@ -18,11 +19,17 @@ function MatchForm({ event }) {
     playerTwo: "",
     playerThree: "",
     playerFour: "",
+    umpireId: "",
     matchDate: "",
   });
 
   function matchType(opt) {
     matchDetail.typeOfMatch = `${opt}`;
+    if (opt == "Men's doubles" || opt == "Women's doubles") {
+      setPlayerState(true);
+    } else {
+      setPlayerState(false);
+    }
     setMatchTypeOption(!matchTypeOption);
   }
 
@@ -70,6 +77,7 @@ function MatchForm({ event }) {
         playerTwo: "",
         playerThree: "",
         playerFour: "",
+        umpireId: "",
         matchDate: "",
       });
       setMatchBox(!matchBox);
@@ -79,7 +87,7 @@ function MatchForm({ event }) {
   return (
     <>
       {matchBox && (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-4 rounded-2xl h-[580px] lg:h-auto overflow-y-auto">
+        <div className="absolute top-0 sm:top-10 sm:left-20 xl:top-1/2 xl:left-1/2 xl:-translate-x-1/2 xl:-translate-y-1/2 bg-white p-4 rounded-2xl max-h-[580px] lg:h-auto overflow-y-auto">
           <h1 className="text-lg md:text-xl lg:text-2xl sm:text-center p-2 font-inter font-bold text-[#B1D848]">
             Create New Match
           </h1>
@@ -89,7 +97,7 @@ function MatchForm({ event }) {
             className="flex flex-col gap-4 font-inert"
           >
             <div className="relative">
-              <label htmlFor="typeOfMatch" className="mx-2">
+              <label htmlFor="typeOfMatch" className="mx-2 font-semibold">
                 Type of match :
               </label>
               <input
@@ -99,7 +107,7 @@ function MatchForm({ event }) {
                 onChange={handleMatchData}
                 onClick={() => setMatchTypeOption((prev) => !prev)}
                 id=""
-                className="border-b-[1px] font-medium border-slate-500 outline-none px-4 py-1 "
+                className="border-b-[1px] font-medium border-slate-500 outline-none px-4 py-1"
               />
               {matchTypeOption ? (
                 <div className="p-2 cursor-pointer absolute shadow-2xl bg-white right-16 top-7">
@@ -120,9 +128,9 @@ function MatchForm({ event }) {
                 </div>
               ) : null}
             </div>
-            <div>
-              <label htmlFor="firstTeamName" className="mx-2">
-                First Team Name :
+            <div className="block sm:flex justify-between">
+              <label htmlFor="firstTeamName" className="mx-2 font-semibold">
+                Team 1 :
               </label>
               <input
                 type="text"
@@ -130,12 +138,12 @@ function MatchForm({ event }) {
                 value={matchDetail.firstTeamName}
                 onChange={handleMatchData}
                 id=""
-                className="border-b-[1px] font-medium border-slate-500 outline-none px-4 py-1 "
+                className="border-b-[1px] font-medium border-slate-500 outline-none px-4 py-1 flex-1"
               />
             </div>
-            <div>
+            <div className="block sm:flex justify-between">
               <label htmlFor="playerOne" className="mx-2">
-                Player number one :
+                {playerState ? <span>Player 1 :</span> : <span>Player :</span>}
               </label>
               <input
                 type="text"
@@ -143,30 +151,34 @@ function MatchForm({ event }) {
                 value={matchDetail.playerOne}
                 onChange={handleMatchData}
                 id=""
-                className="border-b-[1px] font-medium border-slate-500 outline-none px-4 py-1 "
+                className="border-b-[1px] font-medium border-slate-500 outline-none px-4 py-1 flex-1"
               />
             </div>
-            <div>
-              {matchDetail.typeOfMatch === "Women's doubles" ||
-              matchDetail.typeOfMatch === "Men's doubles" ? (
-                <div>
-                  <label htmlFor="playerThree" className="mx-2">
-                    Player number three :
-                  </label>
-                  <input
-                    type="text"
-                    name="playerThree"
-                    value={matchDetail.playerThree}
-                    onChange={handleMatchData}
-                    id=""
-                    className="border-b-[1px] font-medium border-slate-500 outline-none px-4 py-1 "
-                  />
-                </div>
-              ) : null}
+            <div
+              className={` ${
+                matchDetail.typeOfMatch === "Women's doubles" ||
+                matchDetail.typeOfMatch === "Men's doubles"
+                  ? `block`
+                  : `hidden`
+              }`}
+            >
+              <div className="block sm:flex justify-between">
+                <label htmlFor="playerThree" className="mx-2">
+                  Player 2 :
+                </label>
+                <input
+                  type="text"
+                  name="playerThree"
+                  value={matchDetail.playerThree}
+                  onChange={handleMatchData}
+                  id=""
+                  className="border-b-[1px] font-medium border-slate-500 outline-none px-4 py-1 flex-1"
+                />
+              </div>
             </div>
-            <div>
-              <label htmlFor="secondTeamName" className="mx-2">
-                Second Team Name :
+            <div className="block sm:flex justify-between">
+              <label htmlFor="secondTeamName" className="mx-2 font-semibold">
+                Team 2 :
               </label>
               <input
                 type="text"
@@ -174,12 +186,12 @@ function MatchForm({ event }) {
                 value={matchDetail.secondTeamName}
                 onChange={handleMatchData}
                 id=""
-                className="border-b-[1px] font-medium border-slate-500 outline-none px-4 py-1 "
+                className="border-b-[1px] font-medium border-slate-500 outline-none px-4 py-1 flex-1"
               />
             </div>
-            <div>
+            <div className="block sm:flex justify-between">
               <label htmlFor="playerTwo" className="mx-2">
-                Player number two :
+                {playerState ? <span>Player 1 :</span> : <span>Player :</span>}
               </label>
               <input
                 type="text"
@@ -187,26 +199,43 @@ function MatchForm({ event }) {
                 value={matchDetail.playerTwo}
                 onChange={handleMatchData}
                 id=""
-                className="border-b-[1px] font-medium  border-slate-500 outline-none px-4 py-1 "
+                className="border-b-[1px] font-medium  border-slate-500 outline-none px-4 py-1 flex-1"
               />
             </div>
-            <div>
-              {matchDetail.typeOfMatch === "Women's doubles" ||
-              matchDetail.typeOfMatch === "Men's doubles" ? (
-                <div>
-                  <label htmlFor="playerFour" className="mx-2">
-                    Player number four :
-                  </label>
-                  <input
-                    type="text"
-                    name="playerFour"
-                    value={matchDetail.playerFour}
-                    onChange={handleMatchData}
-                    id=""
-                    className="border-b-[1px] font-medium border-slate-500 outline-none px-4 py-1 "
-                  />
-                </div>
-              ) : null}
+            <div
+              className={` ${
+                matchDetail.typeOfMatch === "Women's doubles" ||
+                matchDetail.typeOfMatch === "Men's doubles"
+                  ? `block`
+                  : `hidden`
+              }`}
+            >
+              <div className="block sm:flex justify-between">
+                <label htmlFor="playerFour" className="mx-2">
+                  Player 2 :
+                </label>
+                <input
+                  type="text"
+                  name="playerFour"
+                  value={matchDetail.playerFour}
+                  onChange={handleMatchData}
+                  id=""
+                  className="border-b-[1px] font-medium border-slate-500 outline-none px-4 py-1 flex-1"
+                />
+              </div>
+            </div>
+            <div className="block sm:flex justify-between">
+              <label htmlFor="umpireId" className="mx-2 font-semibold">
+                Umpire Id :
+              </label>
+              <input
+                type="text"
+                name="umpireId"
+                value={matchDetail.umpireId}
+                placeholder="email id"
+                onChange={handleMatchData}
+                className="border-b-[1px] font-medium  border-slate-500 outline-none px-4 py-1 flex-1"
+              />
             </div>
             <div>
               <label htmlFor="typeofmatch" className="mx-2">

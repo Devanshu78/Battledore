@@ -107,7 +107,7 @@ function EventList({ event }) {
                     onClick={() => setClickToDelete(false)}
                     className="border border-gray-800 px-4 py-2 text-black rounded-lg"
                   >
-                    Cancle
+                    Cancel
                   </button>
                   <button
                     onClick={() => removeEvent(event._id)}

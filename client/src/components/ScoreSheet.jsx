@@ -39,6 +39,12 @@ const ScoreSheet = () => {
       socket.off("score_updated");
     };
   }, []);
+
+  const leftSideTeam =
+    matchData.firstTeamName === matchData.receiver
+      ? matchData.secondTeamName
+      : matchData.firstTeamName;
+
   return (
     <div>
       <div className="bg-white rounded-lg shadow-lg p-4 overflow-x-auto w-full">
@@ -46,28 +52,36 @@ const ScoreSheet = () => {
           <tbody>
             <tr>
               <td className="border border-[#5ea0b8] border-l-0 border-r-0 px-4 py-2 sticky left-0 bg-white">
-                {matchData?.playerOne}
+                {leftSideTeam == matchData.firstTeamName
+                  ? matchData.playerOne
+                  : matchData.playerTwo}
               </td>
               {tableData.map((row, index) => (
                 <td
                   key={index}
                   className="border border-[#5ea0b8] text-center px-2"
                 >
-                  {row.firstTeamScore}
+                  {leftSideTeam == matchData.firstTeamName
+                    ? row.secondTeamScore
+                    : row.firstTeamScore}
                 </td>
               ))}
             </tr>
             {matchData.playerThree != "" ? (
               <tr>
                 <td className="border border-[#5ea0b8] border-l-0 border-r-0 px-4 py-2 sticky left-0 bg-white">
-                  {matchData.playerThree}
+                  {leftSideTeam == matchData.firstTeamName
+                    ? matchData.playerThree
+                    : matchData.playerFour}
                 </td>
                 {tableData.map((row, index) => (
                   <td
                     key={index}
                     className="border border-[#5ea0b8] text-center"
                   >
-                    {row.firstTeamScore}
+                    {leftSideTeam == matchData.firstTeamName
+                      ? row.secondTeamScore
+                      : row.firstTeamScore}
                   </td>
                 ))}
               </tr>
@@ -75,14 +89,18 @@ const ScoreSheet = () => {
 
             <tr>
               <td className="border border-t-4 border-[#5ea0b8] border-l-0 border-r-0 px-4 py-2 sticky left-0 bg-white">
-                {matchData?.playerTwo}
+                {leftSideTeam == matchData.firstTeamName
+                  ? matchData.playerTwo
+                  : matchData.playerOne}
               </td>
               {tableData.map((row, index) => (
                 <td
                   key={index}
                   className="border border-t-4 border-[#5ea0b8] text-center"
                 >
-                  {row.secondTeamScore}
+                  {leftSideTeam == matchData.firstTeamName
+                    ? row.firstTeamScore
+                    : row.secondTeamScore}
                 </td>
               ))}
             </tr>
@@ -90,14 +108,18 @@ const ScoreSheet = () => {
             {matchData.playerFour != "" ? (
               <tr>
                 <td className="border border-[#5ea0b8] border-l-0 border-r-0 px-4 py-2 sticky left-0 bg-white">
-                  {matchData.playerFour}
+                  {leftSideTeam == matchData.firstTeamName
+                    ? matchData.playerFour
+                    : matchData.playerThree}
                 </td>
                 {tableData.map((row, index) => (
                   <td
                     key={index}
                     className="border border-[#5ea0b8] text-center"
                   >
-                    {row.secondTeamScore}
+                    {leftSideTeam == matchData.firstTeamName
+                      ? row.firstTeamScore
+                      : row.secondTeamScore}
                   </td>
                 ))}
               </tr>

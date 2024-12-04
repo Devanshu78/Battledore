@@ -37,6 +37,10 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    matches: {
+      type: [Schema.Types.ObjectId],
+      ref: "Match",
+    },
   },
   {
     timestamps: true,

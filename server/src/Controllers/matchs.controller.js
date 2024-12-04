@@ -1,5 +1,6 @@
 import { Match } from "../Models/matchs.model.js";
 import { Event } from "../Models/event.model.js";
+import { User } from "../Models/user.model.js";
 
 const startMatch = async (req, res) => {
   try {
@@ -53,6 +54,7 @@ const createMatch = async (req, res) => {
       playerTwo,
       playerThree,
       playerFour,
+      umpireId,
       matchDate,
     } = req.body;
     if (
@@ -63,10 +65,23 @@ const createMatch = async (req, res) => {
         secondTeamName,
         playerOne,
         playerTwo,
+        umpireId,
         matchDate,
       ].some((field) => field?.trim() === "")
     ) {
       return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const umpire = await User.findOne({
+      email: umpireId,
+      jobrole: "umpire",
+    });
+    if (!umpire) {
+      return res.status(404).json({ message: "Umpire does not exist." });
+    }
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
     }
 
     const newMatch = new Match({
@@ -79,20 +94,19 @@ const createMatch = async (req, res) => {
       playerThree,
       playerFour,
       matchDate,
-      referee: req?.user?.username || "YOYO",
+      referee: umpire.username,
     });
 
     const createdMatch = await newMatch.save();
     if (!createdMatch) {
       return res.status(404).json({ message: "Match not created" });
     }
-    const event = await Event.findById(eventId);
-    if (!event) {
-      return res.status(404).json({ message: "Event not found" });
-    }
 
     event.matches.push(createdMatch._id);
     await event.save();
+
+    umpire.matches.push(createdMatch._id);
+    await umpire.save();
 
     return res
       .status(201)

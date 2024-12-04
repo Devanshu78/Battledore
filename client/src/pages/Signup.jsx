@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useBackendService } from "../ContextAPI/connectToBackend.jsx";
 import { useService } from "../ContextAPI/axios.jsx";
 
 function Signup() {
   const Navigate = useNavigate();
-  // const { signup } = useBackendService();
   const { signup } = useService();
   const [signupData, setSignupData] = useState({
     jobrole: "",
@@ -90,21 +88,21 @@ function Signup() {
                 />
               </div>
               {dropDown && (
-                <div className="border bg-white w-[85%] absolute left-9 top-5 m-auto rounded-3xl px-5 py-3 text-xl font-inter cursor-pointer">
+                <div className="border bg-white absolute left-9 top-5 m-auto rounded-3xl px-5 py-3 text-xl font-inter cursor-pointer font-normal">
                   <div
-                    className="border-b-2 opacity-80"
+                    className="border-b border-gray-800"
                     onClick={() => handleRole("Match Controller")}
                   >
                     Match Controller
                   </div>
                   <div
-                    className="border-b-2 opacity-80"
+                    className="border-b border-gray-800"
                     onClick={() => handleRole("Umpire")}
                   >
                     Umpire
                   </div>
                   <div
-                    className="opacity-80"
+                    className=""
                     onClick={() => handleRole("Match Operator")}
                   >
                     Match Operator
